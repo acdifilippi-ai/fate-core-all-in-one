@@ -700,10 +700,10 @@ function App() {
       TABS.map(tabBtn)
     ),
     e("div",{style:{padding:16,maxWidth:1200,margin:"0 auto"}},
-      tab==="Party"     && e(PartyTab,{pcs,update:updateState,onRoll:handleRoll}),
-      tab==="Scene"     && e(SceneTab,{scene,update:updateState}),
-      tab==="NPCs"      && e(NPCTab,{npcs,update:updateState,onRoll:handleRoll}),
-      tab==="Reference" && e(ReferenceTab,{pcs,gmFate,update:updateState,roller})
+      e("div",{style:{display:tab==="Party"?"block":"none"}},e(PartyTab,{pcs,update:updateState,onRoll:handleRoll})),
+      e("div",{style:{display:tab==="Scene"?"block":"none"}},e(SceneTab,{scene,update:updateState})),
+      e("div",{style:{display:tab==="NPCs"?"block":"none"}},e(NPCTab,{npcs,update:updateState,onRoll:handleRoll})),
+      e("div",{style:{display:tab==="Reference"?"block":"none"}},e(ReferenceTab,{pcs,gmFate,update:updateState,roller}))
     ),
     modalOpen && e("div",{style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",
       display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000},
