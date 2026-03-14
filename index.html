@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fate Core GM Dashboard</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7f8;color:#1a1a2e;min-height:100vh;}
-    input,select,textarea{font-family:inherit;}
-    @keyframes spin0{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-30px,-20px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(540deg) rotateY(360deg) rotateZ(180deg) translate(5px,-35px);}85%{transform:rotateX(680deg) rotateY(440deg) rotateZ(340deg) translate(-3px,-5px);}100%{transform:rotateX(720deg) rotateY(480deg) rotateZ(360deg) translate(0,0);opacity:1;}}
-    @keyframes spin1{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(20px,-40px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(400deg) rotateY(520deg) rotateZ(250deg) translate(-8px,-28px);}85%{transform:rotateX(660deg) rotateY(600deg) rotateZ(330deg) translate(4px,-4px);}100%{transform:rotateX(720deg) rotateY(640deg) rotateZ(360deg) translate(0,0);opacity:1;}}
-    @keyframes spin2{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-10px,30px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(600deg) rotateY(280deg) rotateZ(320deg) translate(12px,-22px);}85%{transform:rotateX(700deg) rotateY(380deg) rotateZ(350deg) translate(-2px,-3px);}100%{transform:rotateX(720deg) rotateY(400deg) rotateZ(360deg) translate(0,0);opacity:1;}}
-    @keyframes spin3{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(35px,15px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(460deg) rotateY(600deg) rotateZ(200deg) translate(-15px,-30px);}85%{transform:rotateX(640deg) rotateY(680deg) rotateZ(340deg) translate(3px,-6px);}100%{transform:rotateX(720deg) rotateY(720deg) rotateZ(360deg) translate(0,0);opacity:1;}}
-    .dr0{animation:spin0 1s cubic-bezier(0.22,1,0.36,1) both;}
-    .dr1{animation:spin1 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.05s;}
-    .dr2{animation:spin2 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.1s;}
-    .dr3{animation:spin3 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.15s;}
-    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-    .syncing{animation:pulse 1s ease-in-out infinite;}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fate Core GM Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7f8;color:#1a1a2e;min-height:100vh;}
+input,select,textarea,button{font-family:inherit;}
+@keyframes spin0{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-30px,-20px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(540deg) rotateY(360deg) rotateZ(180deg) translate(5px,-35px);}85%{transform:rotateX(680deg) rotateY(440deg) rotateZ(340deg) translate(-3px,-5px);}100%{transform:rotateX(720deg) rotateY(480deg) rotateZ(360deg) translate(0,0);opacity:1;}}
+@keyframes spin1{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(20px,-40px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(400deg) rotateY(520deg) rotateZ(250deg) translate(-8px,-28px);}85%{transform:rotateX(660deg) rotateY(600deg) rotateZ(330deg) translate(4px,-4px);}100%{transform:rotateX(720deg) rotateY(640deg) rotateZ(360deg) translate(0,0);opacity:1;}}
+@keyframes spin2{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-10px,30px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(600deg) rotateY(280deg) rotateZ(320deg) translate(12px,-22px);}85%{transform:rotateX(700deg) rotateY(380deg) rotateZ(350deg) translate(-2px,-3px);}100%{transform:rotateX(720deg) rotateY(400deg) rotateZ(360deg) translate(0,0);opacity:1;}}
+@keyframes spin3{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(35px,15px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(460deg) rotateY(600deg) rotateZ(200deg) translate(-15px,-30px);}85%{transform:rotateX(640deg) rotateY(680deg) rotateZ(340deg) translate(3px,-6px);}100%{transform:rotateX(720deg) rotateY(720deg) rotateZ(360deg) translate(0,0);opacity:1;}}
+.dr0{animation:spin0 1s cubic-bezier(0.22,1,0.36,1) both;}
+.dr1{animation:spin1 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.05s;}
+.dr2{animation:spin2 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.1s;}
+.dr3{animation:spin3 1s cubic-bezier(0.22,1,0.36,1) both;animation-delay:.15s;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.syncing{animation:pulse 1s ease-in-out infinite;}
+</style>
 </head>
 <body>
 <div id="root"></div>
-
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-const { useState, useEffect, useRef, useCallback } = React;
-const { createRoot } = ReactDOM;
-const { initializeApp, getDatabase, ref, set, onValue, get } = firebase;
+try {
 
-// Firebase compat mode wrappers
-const firebaseApp = firebase.initializeApp({
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── Firebase ──────────────────────────────────────────────────────────────────
+firebase.initializeApp({
   apiKey: "AIzaSyAEVrS8z7FG_80YgVZE30gMaOnPvSgpj-A",
   authDomain: "fate-core-all-in-one.firebaseapp.com",
   databaseURL: "https://fate-core-all-in-one-default-rtdb.firebaseio.com",
@@ -43,88 +42,43 @@ const firebaseApp = firebase.initializeApp({
   appId: "1:804606534321:web:57828b1d1bd4edfc5e3890"
 });
 const db = firebase.database();
-const dbRef = (path) => db.ref(path);
-const dbSet = (r, val) => r.set(val);
-const dbGet = (r) => r.get();
-const dbOnValue = (r, cb, errCb) => { r.on("value", snap => cb(snap), errCb); return () => r.off("value"); };
-
-// ── Firebase ──────────────────────────────────────────────────────────────────
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-const SKILLS = ["Athletics","Burglary","Contacts","Crafts","Deceive","Drive",
-  "Empathy","Fight","Investigate","Lore","Notice","Physique",
-  "Provoke","Rapport","Resources","Shoot","Stealth","Will"];
-const NPC_SKILLS = ["???", ...SKILLS];
-const NPC_LEVELS = [{label:"+3",bonus:3},{label:"+2",bonus:2},{label:"+1",bonus:1}];
-const PYRAMID = [
-  {label:"Great (+4)",bonus:4,count:1},
-  {label:"Good (+3)",bonus:3,count:2},
-  {label:"Fair (+2)",bonus:2,count:3},
-  {label:"Average (+1)",bonus:1,count:4},
-];
-const LADDER = [[8,"Legendary"],[7,"Epic"],[6,"Fantastic"],[5,"Superb"],
-  [4,"Great"],[3,"Good"],[2,"Fair"],[1,"Average"],
-  [0,"Mediocre"],[-1,"Poor"],[-2,"Terrible"]];
-const FACES = ["+","+","-","-","",""];
-const roll4dF = () => Array.from({length:4},()=>FACES[Math.floor(Math.random()*6)]);
-const diceVal  = d => d==="+"?1:d==="-"?-1:0;
-const ladderName = n => { const e=LADDER.find(([v])=>v===n); return e?e[1]:""; };
-const genCode = () => {
-  const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return "FATE-"+Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join("");
-};
+const SKILLS=["Athletics","Burglary","Contacts","Crafts","Deceive","Drive","Empathy","Fight","Investigate","Lore","Notice","Physique","Provoke","Rapport","Resources","Shoot","Stealth","Will"];
+const NPC_SKILLS=["???",...SKILLS];
+const NPC_LEVELS=[{label:"+3",bonus:3},{label:"+2",bonus:2},{label:"+1",bonus:1}];
+const PYRAMID=[{label:"Great (+4)",bonus:4,count:1},{label:"Good (+3)",bonus:3,count:2},{label:"Fair (+2)",bonus:2,count:3},{label:"Average (+1)",bonus:1,count:4}];
+const LADDER=[[8,"Legendary"],[7,"Epic"],[6,"Fantastic"],[5,"Superb"],[4,"Great"],[3,"Good"],[2,"Fair"],[1,"Average"],[0,"Mediocre"],[-1,"Poor"],[-2,"Terrible"]];
+const FACES=["+","+","-","-","",""];
+const roll4dF=()=>Array.from({length:4},()=>FACES[Math.floor(Math.random()*6)]);
+const diceVal=d=>d==="+"?1:d==="-"?-1:0;
+const ladderName=n=>{const e=LADDER.find(([v])=>v===n);return e?e[1]:"";};
+const genCode=()=>{const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";return"FATE-"+Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join("");};
 
 // ── Colors ────────────────────────────────────────────────────────────────────
-const C = {
-  accent:"#00b4cc", accentDark:"#0090a8", accentLight:"#e0f7fa",
-  header:"#1b2a3b", bg:"#f5f7f8", card:"#ffffff", border:"#dde3e8",
-  text:"#1a1a2e", muted:"#6b7a8d", red:"#e63946", yellow:"#f4a261",
-  purple:"#5e60ce", sectionBg:"#1b2a3b",
-};
+const C={accent:"#00b4cc",accentDark:"#0090a8",accentLight:"#e0f7fa",header:"#1b2a3b",bg:"#f5f7f8",card:"#ffffff",border:"#dde3e8",text:"#1a1a2e",muted:"#6b7a8d",red:"#e63946",yellow:"#f4a261",purple:"#5e60ce",sectionBg:"#1b2a3b"};
 
 // ── Factories ─────────────────────────────────────────────────────────────────
-const newPC = id => ({
-  id, name:"New Character", highConcept:"", trouble:"",
-  aspects:["","",""], skills:PYRAMID.map(r=>Array(r.count).fill("")),
-  physStress:[false,false,false,false], mentStress:[false,false,false,false],
-  mildCon:"", moderateCon:"", severeCon:"",
-  stunts:["","",""], extras:"", fate:3, lastRoll:null, collapsed:false,
-});
-const newNPC = id => ({
-  id, name:"NPC", highConcept:"", trouble:"",
-  npcSkills:[{name:"",bonus:3},{name:"",bonus:2},{name:"",bonus:1}],
-  stress:[false,false,false,false,false], fate:0,
-});
-const defaultState = () => ({
-  pcs:[newPC("pc1")], npcs:[],
-  scene:{name:"",aspects:[],zones:[],boosts:[],hook:"",setting:"",toneTags:""},
-  gmFate:0,
-});
+const newPC=id=>({id,name:"New Character",highConcept:"",trouble:"",aspects:["","",""],skills:PYRAMID.map(r=>Array(r.count).fill("")),physStress:[false,false,false,false],mentStress:[false,false,false,false],mildCon:"",moderateCon:"",severeCon:"",stunts:["","",""],extras:"",fate:3,lastRoll:null,collapsed:false});
+const newNPC=id=>({id,name:"NPC",highConcept:"",trouble:"",npcSkills:[{name:"",bonus:3},{name:"",bonus:2},{name:"",bonus:1}],stress:[false,false,false,false,false],fate:0});
+const defaultState=()=>({pcs:[newPC("pc1")],npcs:[],scene:{name:"",aspects:[],zones:[],boosts:[],hook:"",setting:"",toneTags:""},gmFate:0});
 
-// ── Firebase session hook ─────────────────────────────────────────────────────
-function useFirebaseSession(sessionCode) {
-  const [gameState, setGameState] = useState(null);
-  const [syncStatus, setSyncStatus] = useState("connecting");
+// ── Firebase helpers ──────────────────────────────────────────────────────────
+function useFirebaseSession(sessionCode, initialData) {
+  const [gameState, setGameState] = useState(initialData || null);
+  const [syncStatus, setSyncStatus] = useState(initialData ? "live" : "connecting");
   const isLocalWrite = useRef(false);
   const writeTimer = useRef(null);
 
   useEffect(() => {
     if (!sessionCode) return;
-    setGameState(null);
-    setSyncStatus("connecting");
-    const sessionRef = dbRef(`sessions/${sessionCode}`);
-    const unsub = dbOnValue(sessionRef, snap => {
+    const ref = db.ref("sessions/" + sessionCode);
+    const handler = ref.on("value", snap => {
+      if (isLocalWrite.current) return;
       const val = snap.val();
-      if (val) {
-        if (!isLocalWrite.current) setGameState(val);
-        setSyncStatus("live");
-      } else {
-        const init = defaultState();
-        dbSet(sessionRef, init).then(() => { setGameState(init); setSyncStatus("live"); })
-          .catch(() => setSyncStatus("error"));
-      }
+      if (val) { setGameState(val); setSyncStatus("live"); }
     }, () => setSyncStatus("error"));
-    return () => unsub();
+    return () => ref.off("value");
   }, [sessionCode]);
 
   const updateState = useCallback(updater => {
@@ -136,7 +90,7 @@ function useFirebaseSession(sessionCode) {
       if (writeTimer.current) clearTimeout(writeTimer.current);
       writeTimer.current = setTimeout(async () => {
         try {
-        await dbSet(dbRef(`sessions/${sessionCode}`), next);
+          await db.ref("sessions/" + sessionCode).set(next);
           setSyncStatus("live");
         } catch(e) { setSyncStatus("error"); }
         isLocalWrite.current = false;
@@ -148,100 +102,69 @@ function useFirebaseSession(sessionCode) {
   return { gameState, updateState, syncStatus };
 }
 
-// ── Lobby ─────────────────────────────────────────────────────────────────────
-function Lobby({ onJoin }) {
-  const [mode, setMode] = useState(null);
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+// ── Style helpers ─────────────────────────────────────────────────────────────
+const card={background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:14,marginBottom:12,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"};
+const lbl={fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2};
+const inp={width:"100%",border:`1px solid ${C.border}`,borderRadius:4,padding:"5px 8px",fontSize:13,outline:"none",background:"#fafbfc",boxSizing:"border-box"};
+const ta={width:"100%",border:`1px solid ${C.border}`,borderRadius:4,padding:"6px 8px",fontSize:12,outline:"none",background:"#fafbfc",resize:"vertical",boxSizing:"border-box"};
+const sel={border:`1px solid ${C.border}`,borderRadius:4,padding:"4px 6px",fontSize:12,background:"#fafbfc",outline:"none",width:"100%"};
+const secHead=(col)=>({background:col||C.sectionBg,color:"#fff",padding:"3px 9px",fontSize:10,fontWeight:800,letterSpacing:1.2,textTransform:"uppercase",borderRadius:3,marginBottom:8,display:"inline-block"});
+const btnStyle=(col)=>({background:col||C.accent,color:col===C.red?"#fff":C.header,border:"none",borderRadius:4,padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700});
+const ghost={background:"none",border:`1px solid ${C.border}`,borderRadius:4,padding:"5px 10px",cursor:"pointer",fontSize:12,color:C.muted};
 
-  const createSession = async () => {
-    setLoading(true);
-    const sessionCode = genCode();
-    try {
-      const init = defaultState();
-      await dbSet(dbRef(`sessions/${sessionCode}`), init);
-      onJoin(sessionCode, init);
-    } catch(e) { setError("Failed to create session."); setLoading(false); }
-  };
+const e=React.createElement;
 
-  const joinSession = async () => {
-    const c = code.trim().toUpperCase();
-    if (!c) { setError("Enter a session code."); return; }
-    setLoading(true);
-    try {
-      const snap = await dbGet(dbRef(`sessions/${c}`));
-      if (!snap.exists()) { setError("Session not found."); setLoading(false); return; }
-      onJoin(c, snap.val());
-    } catch(e) { setError("Could not connect."); setLoading(false); }
-  };
-
-  const inp = {width:"100%",border:`1px solid #dde3e8`,borderRadius:4,padding:"10px",
-    fontSize:18,fontWeight:800,textAlign:"center",letterSpacing:3,outline:"none",
-    fontFamily:"inherit"};
-  const btn = (bg,col)=>({background:bg,color:col||C.header,border:"none",borderRadius:6,
-    padding:"12px",fontSize:14,fontWeight:700,width:"100%",cursor:"pointer",marginBottom:8,fontFamily:"inherit"});
-
-  return React.createElement("div",{style:{minHeight:"100vh",background:C.header,display:"flex",
-    alignItems:"center",justifyContent:"center"}},
-    React.createElement("div",{style:{background:"#fff",borderRadius:16,padding:40,width:360,
-      boxShadow:"0 20px 60px rgba(0,0,0,0.4)",textAlign:"center",borderTop:`4px solid ${C.accent}`}},
-      React.createElement("div",{style:{width:56,height:56,background:C.accent,borderRadius:12,
-        display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:28,
-        color:C.header,margin:"0 auto 16px"}},"F"),
-      React.createElement("h1",{style:{fontSize:22,fontWeight:800,letterSpacing:1,color:C.header,marginBottom:4}},"FATE CORE"),
-      React.createElement("p",{style:{color:C.muted,fontSize:13,marginBottom:28}},"GM Dashboard"),
-      !mode && React.createElement(React.Fragment,null,
-        React.createElement("button",{style:btn(C.accent),onClick:createSession,disabled:loading},loading?"Creating…":"🎲 Create New Session"),
-        React.createElement("button",{style:{...btn(C.header),color:"#fff"},onClick:()=>setMode("join")},"🔗 Join Existing Session")
-      ),
-      mode==="join" && React.createElement(React.Fragment,null,
-        React.createElement("p",{style:{color:C.muted,fontSize:13,marginBottom:16}},"Enter the session code from your GM."),
-        React.createElement("input",{value:code,onChange:e=>setCode(e.target.value.toUpperCase()),
-          placeholder:"FATE-XXXX",maxLength:9,style:inp,
-          onKeyDown:e=>e.key==="Enter"&&joinSession()}),
-        error&&React.createElement("p",{style:{color:C.red,fontSize:12,margin:"8px 0"}},error),
-        React.createElement("button",{style:{...btn(C.accent),marginTop:12},onClick:joinSession,disabled:loading},loading?"Joining…":"Join Session"),
-        React.createElement("button",{style:{...btn("#eee"),color:C.muted},onClick:()=>{setMode(null);setError("");setCode("");}},"Back")
-      )
+// ── Shared components ─────────────────────────────────────────────────────────
+function FateCounter({value,onChange,label}){
+  return e("div",{style:{textAlign:"center"}},
+    e("div",{style:lbl},label),
+    e("div",{style:{display:"flex",alignItems:"center",gap:6,justifyContent:"center",marginTop:4}},
+      e("button",{style:btnStyle(C.red),onClick:()=>onChange(Math.max(0,value-1))},"−"),
+      e("span",{style:{fontSize:20,fontWeight:800,minWidth:28,textAlign:"center",color:C.accent}},value),
+      e("button",{style:btnStyle(),onClick:()=>onChange(value+1)},"+")
     )
   );
 }
 
-// ── SyncBadge ─────────────────────────────────────────────────────────────────
-function SyncBadge({status,code}) {
-  const cfg={connecting:{bg:"#f0c040",t:"#7a5c00",l:"Connecting…"},
-    syncing:{bg:"#f0c040",t:"#7a5c00",l:"Syncing…"},
-    live:{bg:"#2a9d5c",t:"#fff",l:"● Live"},
-    error:{bg:C.red,t:"#fff",l:"Sync Error"}}[status]||{bg:"#2a9d5c",t:"#fff",l:"● Live"};
-  return React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,marginLeft:"auto"}},
-    React.createElement("div",{style:{background:"rgba(255,255,255,0.1)",borderRadius:6,
-      padding:"4px 10px",fontSize:12,color:"#8fa8c0",fontWeight:600,letterSpacing:1}},code),
-    React.createElement("div",{className:status==="syncing"?"syncing":"",
-      style:{background:cfg.bg,color:cfg.t,borderRadius:6,padding:"4px 10px",fontSize:12,fontWeight:700}},cfg.l)
+function StressTrack({boxes,onChange,label}){
+  return e("div",{style:{marginBottom:6}},
+    e("div",{style:lbl},label),
+    e("div",{style:{display:"flex",gap:4,marginTop:3}},
+      boxes.map((c,i)=>e("div",{key:i,
+        style:{width:24,height:24,border:`2px solid ${c?C.red:C.border}`,borderRadius:4,cursor:"pointer",background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0},
+        onClick:()=>{const n=[...boxes];n[i]=!n[i];onChange(n);}},c?"✕":""))
+    )
   );
 }
 
-// ── Die ───────────────────────────────────────────────────────────────────────
-function Die({face,index,rolling}) {
+function LastRollBadge({roll}){
+  if(!roll)return e("div",{style:{textAlign:"center"}},e("div",{style:lbl},"Last Roll"),e("div",{style:{fontSize:12,color:C.muted,marginTop:6,fontStyle:"italic"}},"—"));
+  const col=roll.total>=4?C.accent:roll.total<0?C.red:C.text;
+  return e("div",{style:{textAlign:"center"}},
+    e("div",{style:lbl},"Last Roll"),
+    e("div",{style:{marginTop:4,padding:"4px 10px",borderRadius:6,border:`1px solid ${C.border}`,background:"#fafbfc",display:"inline-block",minWidth:80}},
+      e("div",{style:{fontSize:20,fontWeight:900,color:col,lineHeight:1}},roll.total>=0?"+"+roll.total:roll.total),
+      e("div",{style:{fontSize:10,color:col,fontWeight:700,marginTop:1}},ladderName(roll.total)),
+      e("div",{style:{fontSize:10,color:C.muted,marginTop:1}},roll.tierLabel)
+    )
+  );
+}
+
+function Die({face,index,rolling}){
   const col=face==="+"?C.accent:face==="-"?C.red:"#4a5568";
   const sym=face==="+"?"+":face==="-"?"−":"○";
-  return React.createElement("div",{
-    className:rolling?`dr${index}`:"",
-    style:{width:52,height:52,borderRadius:10,flexShrink:0,
-      background:`linear-gradient(145deg,${col}ee,${col}99)`,border:`2px solid ${col}`,
-      boxShadow:`3px 3px 0 ${col}55,5px 5px 0 ${col}22,inset 0 1px 2px rgba(255,255,255,0.4)`,
-      display:"flex",alignItems:"center",justifyContent:"center",
-      fontSize:26,fontWeight:900,color:"#fff",userSelect:"none",
-      opacity:rolling?0:1,transition:rolling?"none":"all 0.2s ease"}},sym);
+  return e("div",{className:rolling?"dr"+index:"",style:{width:52,height:52,borderRadius:10,flexShrink:0,background:`linear-gradient(145deg,${col}ee,${col}99)`,border:`2px solid ${col}`,boxShadow:`3px 3px 0 ${col}55,5px 5px 0 ${col}22,inset 0 1px 2px rgba(255,255,255,0.4)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:900,color:"#fff",userSelect:"none",opacity:rolling?0:1,transition:rolling?"none":"all 0.2s ease"}},sym);
 }
-function DiceRow({faces,animKey,rolling}) {
-  return React.createElement("div",{style:{display:"flex",gap:12,justifyContent:"center",minHeight:60,alignItems:"center"}},
-    faces.map((f,i)=>React.createElement(Die,{key:`${animKey}-${i}`,face:f,index:i,rolling})));
+
+function DiceRow({faces,animKey,rolling}){
+  return e("div",{style:{display:"flex",gap:12,justifyContent:"center",minHeight:60,alignItems:"center"}},
+    faces.map((f,i)=>e(Die,{key:animKey+"-"+i,face:f,index:i,rolling})));
 }
-function useDiceRoller() {
+
+function useDiceRoller(){
   const [st,setSt]=useState({faces:["","","",""],rolling:false,result:null,animKey:0,history:[]});
-  const doRoll=(bonus=0,tierLabel="Plain Roll",pcName="",onDone)=>{
+  const doRoll=(bonus,tierLabel,pcName,onDone)=>{
+    bonus=bonus||0; tierLabel=tierLabel||"Plain Roll"; pcName=pcName||"";
     setSt(s=>({...s,rolling:true,result:null,animKey:s.animKey+1}));
     setTimeout(()=>{
       const d=roll4dF();
@@ -249,89 +172,27 @@ function useDiceRoller() {
       const total=dsum+bonus;
       const r={dice:d,diceSum:dsum,bonus,total,tierLabel,pcName,ts:new Date().toLocaleTimeString()};
       setSt(s=>({faces:d,rolling:false,result:r,animKey:s.animKey,history:[r,...s.history].slice(0,12)}));
-      if(onDone) onDone(r);
+      if(onDone)onDone(r);
     },1100);
   };
   return {...st,doRoll};
 }
 
-// ── Shared UI helpers (using React.createElement) ─────────────────────────────
-const e = React.createElement;
-
-function FateCounter({value,onChange,label}) {
-  return e("div",{style:{textAlign:"center"}},
-    e("div",{style:{fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2}},label),
-    e("div",{style:{display:"flex",alignItems:"center",gap:6,justifyContent:"center",marginTop:4}},
-      e("button",{style:{background:C.red,color:"#fff",border:"none",borderRadius:4,padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700},onClick:()=>onChange(Math.max(0,value-1))},"−"),
-      e("span",{style:{fontSize:20,fontWeight:800,minWidth:28,textAlign:"center",color:C.accent}},value),
-      e("button",{style:{background:C.accent,color:C.header,border:"none",borderRadius:4,padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700},onClick:()=>onChange(value+1)},"+")
-    )
-  );
-}
-
-function StressTrack({boxes,onChange,label}) {
-  return e("div",{style:{marginBottom:6}},
-    e("div",{style:{fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2}},label),
-    e("div",{style:{display:"flex",gap:4,marginTop:3}},
-      boxes.map((c,i)=>e("div",{key:i,
-        style:{width:24,height:24,border:`2px solid ${c?C.red:C.border}`,borderRadius:4,cursor:"pointer",
-          background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",
-          color:"#fff",fontWeight:700,fontSize:12,flexShrink:0},
-        onClick:()=>{const n=[...boxes];n[i]=!n[i];onChange(n);}},c?"✕":""))
-    )
-  );
-}
-
-function LastRollBadge({roll}) {
-  if(!roll) return e("div",{style:{textAlign:"center"}},
-    e("div",{style:{fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2}},"Last Roll"),
-    e("div",{style:{fontSize:12,color:C.muted,marginTop:6,fontStyle:"italic"}},"—")
-  );
-  const col=roll.total>=4?C.accent:roll.total<0?C.red:C.text;
-  return e("div",{style:{textAlign:"center"}},
-    e("div",{style:{fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2}},"Last Roll"),
-    e("div",{style:{marginTop:4,padding:"4px 10px",borderRadius:6,border:`1px solid ${C.border}`,
-      background:"#fafbfc",display:"inline-block",minWidth:80}},
-      e("div",{style:{fontSize:20,fontWeight:900,color:col,lineHeight:1}},roll.total>=0?`+${roll.total}`:roll.total),
-      e("div",{style:{fontSize:10,color:col,fontWeight:700,marginTop:1}},ladderName(roll.total)),
-      e("div",{style:{fontSize:10,color:C.muted,marginTop:1}},roll.tierLabel)
-    )
-  );
-}
-
-const inp = {width:"100%",border:`1px solid ${C.border}`,borderRadius:4,padding:"5px 8px",
-  fontSize:13,outline:"none",background:"#fafbfc",boxSizing:"border-box",fontFamily:"inherit"};
-const ta  = {width:"100%",border:`1px solid ${C.border}`,borderRadius:4,padding:"6px 8px",
-  fontSize:12,outline:"none",background:"#fafbfc",resize:"vertical",boxSizing:"border-box",fontFamily:"inherit"};
-const sel = {border:`1px solid ${C.border}`,borderRadius:4,padding:"4px 6px",fontSize:12,
-  background:"#fafbfc",outline:"none",width:"100%",fontFamily:"inherit"};
-const secHead = (col)=>({background:col||C.sectionBg,color:"#fff",padding:"3px 9px",fontSize:10,
-  fontWeight:800,letterSpacing:1.2,textTransform:"uppercase",borderRadius:3,marginBottom:8,display:"inline-block"});
-const lbl = {fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2};
-const card = {background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:14,marginBottom:12,
-  boxShadow:"0 1px 3px rgba(0,0,0,0.06)"};
-
-function SkillPyramid({skills,onChange,onRoll,pcName}) {
+function SkillPyramid({skills,onChange,onRoll,pcName}){
   const used=skills.flat().filter(Boolean);
-  return e("div",null,
-    PYRAMID.map((row,ri)=>e("div",{key:ri,style:{display:"flex",alignItems:"center",gap:6,marginBottom:5}},
-      e("button",{onClick:()=>onRoll(row.bonus,row.label,pcName),
-        style:{width:120,fontSize:11,fontWeight:700,color:C.header,background:C.accent,border:"none",
-          borderRadius:4,padding:"4px 6px",cursor:"pointer",flexShrink:0,textAlign:"left",fontFamily:"inherit"}},
-        row.label+" 🎲"),
+  return e("div",null,PYRAMID.map((row,ri)=>
+    e("div",{key:ri,style:{display:"flex",alignItems:"center",gap:6,marginBottom:5}},
+      e("button",{onClick:()=>onRoll(row.bonus,row.label,pcName),style:{width:120,fontSize:11,fontWeight:700,color:C.header,background:C.accent,border:"none",borderRadius:4,padding:"4px 6px",cursor:"pointer",flexShrink:0,textAlign:"left"}},row.label+" 🎲"),
       skills[ri].map((val,si)=>{
         const opts=SKILLS.filter(sk=>!used.includes(sk)||sk===val);
-        return e("select",{key:si,value:val,style:sel,
-          onChange:ev=>{const ns=skills.map(r=>[...r]);ns[ri][si]=ev.target.value;onChange(ns);}},
-          e("option",{value:""},"—"),
-          opts.map(sk=>e("option",{key:sk,value:sk},sk))
-        );
+        return e("select",{key:si,value:val,style:sel,onChange:ev=>{const ns=skills.map(r=>[...r]);ns[ri][si]=ev.target.value;onChange(ns);}},
+          e("option",{value:""},"—"),opts.map(sk=>e("option",{key:sk,value:sk},sk)));
       })
-    ))
-  );
+    )
+  ));
 }
 
-function NPCSkillRow({skills,onChange,onRoll,npcName}) {
+function NPCSkillRow({skills,onChange,onRoll,npcName}){
   const usedNames=skills.map(sk=>sk.name).filter(Boolean);
   return e("div",{style:{marginBottom:10}},
     e("div",{style:lbl},"Skills"),
@@ -340,101 +201,116 @@ function NPCSkillRow({skills,onChange,onRoll,npcName}) {
       const isSecret=cur.name==="???";
       const available=NPC_SKILLS.filter(sk=>!usedNames.includes(sk)||sk===cur.name);
       return e("div",{key:i,style:{display:"flex",alignItems:"center",gap:5,marginBottom:4}},
-        e("button",{
-          onClick:()=>{if(cur.name)onRoll(lvl.bonus,isSecret?"???":cur.name+` (${lvl.label})`,npcName);},
-          disabled:!cur.name,
-          style:{width:28,flexShrink:0,background:cur.name?(isSecret?"#9b2226":C.accent):"#ccc",
-            color:C.header,border:"none",borderRadius:4,padding:"3px 0",
-            cursor:cur.name?"pointer":"default",fontSize:13,fontWeight:700,textAlign:"center",fontFamily:"inherit"}
-        },"🎲"),
-        e("span",{style:{width:28,fontSize:12,fontWeight:800,color:isSecret?"#9b2226":C.accent,
-          flexShrink:0,textAlign:"right"}},lvl.label),
-        e("select",{value:cur.name,
-          style:{...sel,color:isSecret?"#9b2226":undefined,fontWeight:isSecret?700:400},
+        e("button",{onClick:()=>{if(cur.name)onRoll(lvl.bonus,isSecret?"???":cur.name+" ("+lvl.label+")",npcName);},disabled:!cur.name,
+          style:{width:28,flexShrink:0,background:cur.name?(isSecret?"#9b2226":C.accent):"#ccc",color:C.header,border:"none",borderRadius:4,padding:"3px 0",cursor:cur.name?"pointer":"default",fontSize:13,fontWeight:700,textAlign:"center"}},"🎲"),
+        e("span",{style:{width:28,fontSize:12,fontWeight:800,color:isSecret?"#9b2226":C.accent,flexShrink:0,textAlign:"right"}},lvl.label),
+        e("select",{value:cur.name,style:{...sel,color:isSecret?"#9b2226":undefined,fontWeight:isSecret?700:400},
           onChange:ev=>{const ns=[...skills];ns[i]={...ns[i],name:ev.target.value,bonus:lvl.bonus};onChange(ns);}},
-          e("option",{value:""},"—"),
-          available.map(sk=>e("option",{key:sk,value:sk,
-            style:sk==="???"?{fontWeight:700,color:"#9b2226"}:{}},sk))
-        )
+          e("option",{value:""},"—"),available.map(sk=>e("option",{key:sk,value:sk,style:sk==="???"?{fontWeight:700,color:"#9b2226"}:{}},sk)))
       );
     })
   );
 }
 
+// ── Lobby ─────────────────────────────────────────────────────────────────────
+function Lobby({onJoin}){
+  const [mode,setMode]=useState(null);
+  const [code,setCode]=useState("");
+  const [error,setError]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const createSession=async()=>{
+    setLoading(true);
+    const sc=genCode();
+    const init=defaultState();
+    try{
+      await db.ref("sessions/"+sc).set(init);
+      onJoin(sc,init);
+    }catch(err){setError("Failed: "+err.message);setLoading(false);}
+  };
+
+  const joinSession=async()=>{
+    const c=code.trim().toUpperCase();
+    if(!c){setError("Enter a code.");return;}
+    setLoading(true);
+    try{
+      const snap=await db.ref("sessions/"+c).get();
+      if(!snap.exists()){setError("Session not found.");setLoading(false);return;}
+      onJoin(c,snap.val());
+    }catch(err){setError("Error: "+err.message);setLoading(false);}
+  };
+
+  return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",alignItems:"center",justifyContent:"center"}},
+    e("div",{style:{background:"#fff",borderRadius:16,padding:40,width:360,boxShadow:"0 20px 60px rgba(0,0,0,0.4)",textAlign:"center",borderTop:"4px solid "+C.accent}},
+      e("div",{style:{width:56,height:56,background:C.accent,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:28,color:C.header,margin:"0 auto 16px"}},"F"),
+      e("h1",{style:{fontSize:22,fontWeight:800,letterSpacing:1,color:C.header,marginBottom:4}},"FATE CORE"),
+      e("p",{style:{color:C.muted,fontSize:13,marginBottom:28}},"GM Dashboard"),
+      error&&e("p",{style:{color:C.red,fontSize:12,marginBottom:12}},error),
+      !mode&&e(React.Fragment,null,
+        e("button",{style:{...btnStyle(),padding:"12px",fontSize:14,width:"100%",marginBottom:8},onClick:createSession,disabled:loading},loading?"Creating…":"🎲 Create New Session"),
+        e("button",{style:{...btnStyle(C.header),color:"#fff",padding:"12px",fontSize:14,width:"100%"},onClick:()=>setMode("join")},"🔗 Join Existing Session")
+      ),
+      mode==="join"&&e(React.Fragment,null,
+        e("p",{style:{color:C.muted,fontSize:13,marginBottom:16}},"Enter the session code from your GM."),
+        e("input",{value:code,onChange:ev=>setCode(ev.target.value.toUpperCase()),placeholder:"FATE-XXXX",maxLength:9,
+          style:{...inp,fontSize:18,fontWeight:800,textAlign:"center",letterSpacing:3,marginBottom:12,padding:"10px"},
+          onKeyDown:ev=>ev.key==="Enter"&&joinSession()}),
+        e("button",{style:{...btnStyle(),padding:"12px",fontSize:14,width:"100%",marginBottom:8},onClick:joinSession,disabled:loading},loading?"Joining…":"Join Session"),
+        e("button",{style:{...ghost,width:"100%"},onClick:()=>{setMode(null);setError("");setCode("");}},"Back")
+      )
+    )
+  );
+}
+
+// ── SyncBadge ─────────────────────────────────────────────────────────────────
+function SyncBadge({status,code}){
+  const cfg={connecting:{bg:"#f0c040",t:"#7a5c00",l:"Connecting…"},syncing:{bg:"#f0c040",t:"#7a5c00",l:"Syncing…"},live:{bg:"#2a9d5c",t:"#fff",l:"● Live"},error:{bg:C.red,t:"#fff",l:"Sync Error"}}[status]||{bg:"#2a9d5c",t:"#fff",l:"● Live"};
+  return e("div",{style:{display:"flex",alignItems:"center",gap:10,marginLeft:"auto"}},
+    e("div",{style:{background:"rgba(255,255,255,0.1)",borderRadius:6,padding:"4px 10px",fontSize:12,color:"#8fa8c0",fontWeight:600,letterSpacing:1}},code),
+    e("div",{className:status==="syncing"?"syncing":"",style:{background:cfg.bg,color:cfg.t,borderRadius:6,padding:"4px 10px",fontSize:12,fontWeight:700}},cfg.l)
+  );
+}
+
 // ── PC Card ───────────────────────────────────────────────────────────────────
-function PCCard({pc,onChange,onRemove,onRoll}) {
+function PCCard({pc,onChange,onRemove,onRoll}){
   const upd=(f,v)=>onChange({...pc,[f]:v});
   const updA=(i,v)=>{const a=[...pc.aspects];a[i]=v;upd("aspects",a);};
-  const updStunt=(i,v)=>{const st=[...pc.stunts];st[i]=v;upd("stunts",st);};
+  const updS=(i,v)=>{const st=[...pc.stunts];st[i]=v;upd("stunts",st);};
   const handleRoll=(bonus,tierLabel,pcName)=>onRoll(bonus,tierLabel,pcName,r=>onChange({...pc,lastRoll:r}));
 
-  return e("div",{style:{...card,borderTop:`3px solid ${C.accent}`,marginBottom:10}},
+  return e("div",{style:{...card,borderTop:"3px solid "+C.accent,marginBottom:10}},
     e("div",{style:{display:"flex",gap:10,alignItems:"center"}},
-      e("button",{onClick:()=>upd("collapsed",!pc.collapsed),
-        style:{background:C.header,border:"none",borderRadius:4,color:"#fff",width:26,height:26,
-          cursor:"pointer",flexShrink:0,fontSize:14,display:"flex",alignItems:"center",
-          justifyContent:"center",fontFamily:"inherit"}},pc.collapsed?"▶":"▼"),
-      e("input",{value:pc.name,onChange:ev=>upd("name",ev.target.value),
-        placeholder:"Character Name",style:{...inp,fontSize:15,fontWeight:700,flex:1}}),
-      pc.collapsed && e("div",{style:{display:"flex",gap:6,alignItems:"center",flexShrink:0}},
+      e("button",{onClick:()=>upd("collapsed",!pc.collapsed),style:{background:C.header,border:"none",borderRadius:4,color:"#fff",width:26,height:26,cursor:"pointer",flexShrink:0,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}},pc.collapsed?"▶":"▼"),
+      e("input",{value:pc.name,onChange:ev=>upd("name",ev.target.value),placeholder:"Character Name",style:{...inp,fontSize:15,fontWeight:700,flex:1}}),
+      pc.collapsed&&e("div",{style:{display:"flex",gap:6,alignItems:"center",flexShrink:0}},
         pc.highConcept&&e("span",{style:{fontSize:12,color:C.muted,fontWeight:600}},pc.highConcept),
-        e("span",{style:{background:C.accentLight,color:C.accentDark,borderRadius:4,
-          padding:"2px 8px",fontWeight:800,fontSize:13}},"◆ "+pc.fate),
-        pc.lastRoll&&e("span",{style:{background:"#f0f4f8",borderRadius:4,padding:"2px 8px",fontSize:12,fontWeight:700,
-          color:pc.lastRoll.total>=4?C.accent:pc.lastRoll.total<0?C.red:C.text}},
-          (pc.lastRoll.total>=0?"+":"")+pc.lastRoll.total+" "+ladderName(pc.lastRoll.total))
+        e("span",{style:{background:C.accentLight,color:C.accentDark,borderRadius:4,padding:"2px 8px",fontWeight:800,fontSize:13}},"◆ "+pc.fate),
+        pc.lastRoll&&e("span",{style:{background:"#f0f4f8",borderRadius:4,padding:"2px 8px",fontSize:12,fontWeight:700,color:pc.lastRoll.total>=4?C.accent:pc.lastRoll.total<0?C.red:C.text}},(pc.lastRoll.total>=0?"+":"")+pc.lastRoll.total+" "+ladderName(pc.lastRoll.total))
       ),
-      !pc.collapsed && e("div",{style:{display:"flex",gap:16,alignItems:"flex-start",flexShrink:0}},
+      !pc.collapsed&&e("div",{style:{display:"flex",gap:16,alignItems:"flex-start",flexShrink:0}},
         e(FateCounter,{value:pc.fate,onChange:v=>upd("fate",v),label:"Fate Points"}),
         e(LastRollBadge,{roll:pc.lastRoll})
       ),
-      e("button",{style:{background:"none",border:`1px solid ${C.border}`,borderRadius:4,
-        padding:"4px 8px",cursor:"pointer",fontSize:12,color:C.red,flexShrink:0,fontFamily:"inherit"},
-        onClick:onRemove},"✕")
+      e("button",{style:{...ghost,color:C.red,flexShrink:0,padding:"4px 8px"},onClick:onRemove},"✕")
     ),
-    !pc.collapsed && e("div",{style:{marginTop:12}},
+    !pc.collapsed&&e("div",{style:{marginTop:12}},
       e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
         e("div",null,
           e("div",{style:secHead()},"Aspects"),
-          [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>
-            e("div",{key:f,style:{marginBottom:6}},
-              e("div",{style:lbl},l),
-              e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp})
-            )
-          ),
-          pc.aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},
-            e("div",{style:lbl},"Aspect "+(i+1)),
-            e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:`Aspect ${i+1}`,style:inp})
-          )),
+          [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
+          pc.aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},e("div",{style:lbl},"Aspect "+(i+1)),e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
           e("div",{style:{marginTop:10}},
             e("div",{style:secHead()},"Stress & Consequences"),
             e(StressTrack,{boxes:pc.physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)}),
             e(StressTrack,{boxes:pc.mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}),
-            e("div",{style:{marginTop:8}},
-              [["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>
-                e("div",{key:f,style:{marginBottom:5}},
-                  e("div",{style:lbl},l),
-                  e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp})
-                )
-              )
-            )
+            e("div",{style:{marginTop:8}},[["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:5}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp}))))
           )
         ),
         e("div",null,
           e("div",{style:secHead()},"Skills"),
           e(SkillPyramid,{skills:pc.skills,onChange:v=>upd("skills",v),onRoll:handleRoll,pcName:pc.name||"Unnamed"}),
-          e("div",{style:{marginTop:10}},
-            e("div",{style:secHead()},"Stunts"),
-            pc.stunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},
-              e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),
-              e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:`Stunt ${i+1}…`,style:inp})
-            ))
-          ),
-          e("div",{style:{marginTop:10}},
-            e("div",{style:secHead()},"Extras"),
-            e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),
-              placeholder:"List extras here…",rows:3,style:ta})
-          )
+          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Stunts"),pc.stunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),e("input",{value:st,onChange:ev=>updS(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))),
+          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta}))
         )
       )
     )
@@ -442,25 +318,19 @@ function PCCard({pc,onChange,onRemove,onRoll}) {
 }
 
 // ── Party Tab ─────────────────────────────────────────────────────────────────
-function PartyTab({pcs,update,onRoll}) {
+function PartyTab({pcs,update,onRoll}){
   const add=()=>update(s=>({...s,pcs:[...s.pcs,newPC("pc"+Date.now())]}));
   const rem=id=>update(s=>({...s,pcs:s.pcs.filter(p=>p.id!==id)}));
   const upd=pc=>update(s=>({...s,pcs:s.pcs.map(p=>p.id===pc.id?pc:p)}));
-  const collapseAll=()=>update(s=>({...s,pcs:s.pcs.map(p=>({...p,collapsed:true}))}));
-  const expandAll=()=>update(s=>({...s,pcs:s.pcs.map(p=>({...p,collapsed:false}))}));
-  const ghost={background:"none",border:`1px solid ${C.border}`,borderRadius:4,
-    padding:"5px 10px",cursor:"pointer",fontSize:12,color:C.muted,fontFamily:"inherit"};
   return e("div",null,
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
       e("h2",{style:{margin:0,fontSize:16,fontWeight:800}},"Player Characters"),
       e("div",{style:{display:"flex",gap:8}},
         pcs.length>0&&e(React.Fragment,null,
-          e("button",{style:ghost,onClick:collapseAll},"Collapse All"),
-          e("button",{style:ghost,onClick:expandAll},"Expand All")
+          e("button",{style:ghost,onClick:()=>update(s=>({...s,pcs:s.pcs.map(p=>({...p,collapsed:true}))}))}, "Collapse All"),
+          e("button",{style:ghost,onClick:()=>update(s=>({...s,pcs:s.pcs.map(p=>({...p,collapsed:false}))}))}, "Expand All")
         ),
-        e("button",{style:{background:C.accent,color:C.header,border:"none",borderRadius:4,
-          padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit"},
-          onClick:add},"+ Add PC")
+        e("button",{style:btnStyle(),onClick:add},"+ Add PC")
       )
     ),
     pcs.length===0&&e("div",{style:{color:C.muted,textAlign:"center",padding:40}},"No PCs yet."),
@@ -469,129 +339,85 @@ function PartyTab({pcs,update,onRoll}) {
 }
 
 // ── Scene Tab ─────────────────────────────────────────────────────────────────
-function SceneTab({scene,update}) {
+function SceneTab({scene,update}){
   const upd=patch=>update(s=>({...s,scene:{...s.scene,...patch}}));
   const addA=()=>upd({aspects:[...scene.aspects,{text:"",boxes:[false,false]}]});
   const remA=i=>upd({aspects:scene.aspects.filter((_,j)=>j!==i)});
   const updAT=(i,v)=>{const a=[...scene.aspects];a[i]={...a[i],text:v};upd({aspects:a});};
   const togAB=(i,bi)=>{const a=[...scene.aspects];const b=[...a[i].boxes];b[bi]=!b[bi];a[i]={...a[i],boxes:b};upd({aspects:a});};
-  const addZ=()=>upd({zones:[...scene.zones,""]});
-  const remZ=i=>upd({zones:scene.zones.filter((_,j)=>j!==i)});
-  const updZ=(i,v)=>{const z=[...scene.zones];z[i]=v;upd({zones:z});};
-  const addB=()=>upd({boosts:[...scene.boosts,{label:"",player:""}]});
-  const remB=i=>upd({boosts:scene.boosts.filter((_,j)=>j!==i)});
-  const updB=(i,f,v)=>{const b=[...scene.boosts];b[i]={...b[i],[f]:v};upd({boosts:b});};
-  const ghost={background:"none",border:`1px solid ${C.border}`,borderRadius:4,
-    padding:"3px 7px",cursor:"pointer",fontSize:12,color:C.red,fontFamily:"inherit"};
-  const addBtn={background:C.accent,color:C.header,border:"none",borderRadius:4,
-    padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit"};
-  const ibox=c=>({width:20,height:20,border:`2px solid ${c?C.accent:C.border}`,borderRadius:3,
-    cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",
-    justifyContent:"center",color:"#fff",fontWeight:700,fontSize:10,flexShrink:0});
+  const ibox=c=>({width:20,height:20,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:10,flexShrink:0});
   return e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
     e("div",null,
       e("div",{style:card},
         e("div",{style:secHead()},"Scene"),
         e("div",{style:lbl},"Scene Name"),
-        e("input",{value:scene.name,onChange:ev=>upd({name:ev.target.value}),
-          placeholder:"Scene name…",style:{...inp,marginBottom:12}}),
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
-          e("div",{style:secHead()},"Scene Aspects"),
-          e("button",{style:addBtn,onClick:addA},"+")
-        ),
+        e("input",{value:scene.name,onChange:ev=>upd({name:ev.target.value}),placeholder:"Scene name…",style:{...inp,marginBottom:12}}),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},e("div",{style:secHead()},"Scene Aspects"),e("button",{style:btnStyle(),onClick:addA},"+")),
         scene.aspects.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No scene aspects."),
         scene.aspects.map((a,i)=>e("div",{key:i,style:{display:"flex",gap:8,alignItems:"center",marginBottom:5}},
           e("input",{value:a.text,onChange:ev=>updAT(i,ev.target.value),placeholder:"Scene aspect…",style:inp}),
-          e("div",{style:{display:"flex",gap:3,flexShrink:0}},
-            a.boxes.map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togAB(i,bi)},c?"✓":""))
-          ),
-          e("button",{style:ghost,onClick:()=>remA(i)},"✕")
+          e("div",{style:{display:"flex",gap:3,flexShrink:0}},a.boxes.map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togAB(i,bi)},c?"✓":""))),
+          e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remA(i)},"✕")
         ))
       ),
       e("div",{style:card},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
-          e("div",{style:secHead()},"Zones"),e("button",{style:addBtn,onClick:addZ},"+")),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Zones"),e("button",{style:btnStyle(),onClick:()=>upd({zones:[...scene.zones,""]})},"+")),
         scene.zones.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No zones."),
         scene.zones.map((z,i)=>e("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
-          e("input",{value:z,onChange:ev=>updZ(i,ev.target.value),placeholder:`Zone ${i+1}…`,style:inp}),
-          e("button",{style:ghost,onClick:()=>remZ(i)},"✕")
-        ))
+          e("input",{value:z,onChange:ev=>{const zz=[...scene.zones];zz[i]=ev.target.value;upd({zones:zz});},placeholder:"Zone "+(i+1)+"…",style:inp}),
+          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({zones:scene.zones.filter((_,j)=>j!==i)})},"✕")))
       ),
       e("div",{style:card},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
-          e("div",{style:secHead()},"Boosts"),e("button",{style:addBtn,onClick:addB},"+")),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Boosts"),e("button",{style:btnStyle(),onClick:()=>upd({boosts:[...scene.boosts,{label:"",player:""}]})},"+")),
         scene.boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No boosts."),
         scene.boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:8,alignItems:"center",marginBottom:6}},
-          e("input",{value:b.label,onChange:ev=>updB(i,"label",ev.target.value),placeholder:"Boost name…",style:inp}),
-          e("input",{value:b.player,onChange:ev=>updB(i,"player",ev.target.value),placeholder:"Player…",style:{...inp,width:110}}),
-          e("button",{style:ghost,onClick:()=>remB(i)},"✕")
-        ))
+          e("input",{value:b.label,onChange:ev=>{const bb=[...scene.boosts];bb[i]={...bb[i],label:ev.target.value};upd({boosts:bb});},placeholder:"Boost name…",style:inp}),
+          e("input",{value:b.player,onChange:ev=>{const bb=[...scene.boosts];bb[i]={...bb[i],player:ev.target.value};upd({boosts:bb});},placeholder:"Player…",style:{...inp,width:110}}),
+          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({boosts:scene.boosts.filter((_,j)=>j!==i)})},"✕")))
       )
     ),
     e("div",null,
-      e("div",{style:{...card,borderTop:`3px solid ${C.purple}`}},
+      e("div",{style:{...card,borderTop:"3px solid "+C.purple}},
         e("div",{style:secHead(C.purple)},"World Building"),
-        e("div",{style:{marginBottom:12}},
-          e("div",{style:lbl},"The Hook"),
-          e("textarea",{value:scene.hook||"",onChange:ev=>upd({hook:ev.target.value}),
-            placeholder:"One sentence that kicks the session off…",rows:2,style:ta})
-        ),
-        e("div",{style:{marginBottom:12}},
-          e("div",{style:lbl},"Setting"),
-          e("textarea",{value:scene.setting||"",onChange:ev=>upd({setting:ev.target.value}),
-            placeholder:"Describe the world or premise…",rows:3,style:ta})
-        ),
-        e("div",null,
-          e("div",{style:lbl},"Tone / Genre Tags"),
-          e("input",{value:scene.toneTags||"",onChange:ev=>upd({toneTags:ev.target.value}),
-            placeholder:"e.g. tense, pulpy, mysterious…",style:inp})
-        )
+        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"The Hook"),e("textarea",{value:scene.hook||"",onChange:ev=>upd({hook:ev.target.value}),placeholder:"One sentence that kicks the session off…",rows:2,style:ta})),
+        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"Setting"),e("textarea",{value:scene.setting||"",onChange:ev=>upd({setting:ev.target.value}),placeholder:"Describe the world or premise…",rows:3,style:ta})),
+        e("div",null,e("div",{style:lbl},"Tone / Genre Tags"),e("input",{value:scene.toneTags||"",onChange:ev=>upd({toneTags:ev.target.value}),placeholder:"e.g. tense, pulpy, mysterious…",style:inp}))
       )
     )
   );
 }
 
 // ── NPC Tab ───────────────────────────────────────────────────────────────────
-function NPCTab({npcs,update,onRoll}) {
+function NPCTab({npcs,update,onRoll}){
   const add=()=>update(s=>({...s,npcs:[...s.npcs,newNPC("npc"+Date.now())]}));
   const rem=id=>update(s=>({...s,npcs:s.npcs.filter(x=>x.id!==id)}));
   const upd=npc=>update(s=>({...s,npcs:s.npcs.map(x=>x.id===npc.id?npc:x)}));
-  const ghost={background:"none",border:`1px solid ${C.border}`,borderRadius:4,
-    padding:"5px 10px",cursor:"pointer",fontSize:12,color:C.red,fontFamily:"inherit"};
   return e("div",null,
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
       e("h2",{style:{margin:0,fontSize:16,fontWeight:800}},"NPCs"),
-      e("button",{style:{background:C.accent,color:C.header,border:"none",borderRadius:4,
-        padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit"},onClick:add},"+ Add NPC")
+      e("button",{style:btnStyle(),onClick:add},"+ Add NPC")
     ),
     npcs.length===0&&e("div",{style:{color:C.muted,textAlign:"center",padding:40}},"No NPCs yet."),
     e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(290px,1fr))",gap:12}},
-      npcs.map(npc=>e("div",{key:npc.id,style:{...card,borderTop:`3px solid ${C.yellow}`}},
+      npcs.map(npc=>e("div",{key:npc.id,style:{...card,borderTop:"3px solid "+C.yellow}},
         e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},
-          e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),
-            placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
-          e("button",{style:{...ghost,marginLeft:4},onClick:()=>rem(npc.id)},"✕")
+          e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
+          e("button",{style:{...ghost,color:C.red,marginLeft:4},onClick:()=>rem(npc.id)},"✕")
         ),
-        e("div",{style:{marginBottom:6}},e("div",{style:lbl},"High Concept"),
-          e("input",{value:npc.highConcept,onChange:ev=>upd({...npc,highConcept:ev.target.value}),
-            placeholder:"High concept…",style:inp})),
-        e("div",{style:{marginBottom:10}},e("div",{style:lbl},"Trouble"),
-          e("input",{value:npc.trouble,onChange:ev=>upd({...npc,trouble:ev.target.value}),
-            placeholder:"Trouble…",style:inp})),
-        e(NPCSkillRow,{skills:npc.npcSkills,onChange:v=>upd({...npc,npcSkills:v}),
-          onRoll,npcName:npc.name||"NPC"}),
+        e("div",{style:{marginBottom:6}},e("div",{style:lbl},"High Concept"),e("input",{value:npc.highConcept,onChange:ev=>upd({...npc,highConcept:ev.target.value}),placeholder:"High concept…",style:inp})),
+        e("div",{style:{marginBottom:10}},e("div",{style:lbl},"Trouble"),e("input",{value:npc.trouble,onChange:ev=>upd({...npc,trouble:ev.target.value}),placeholder:"Trouble…",style:inp})),
+        e(NPCSkillRow,{skills:npc.npcSkills,onChange:v=>upd({...npc,npcSkills:v}),onRoll,npcName:npc.name||"NPC"}),
         e(StressTrack,{boxes:npc.stress,label:"Stress",onChange:v=>upd({...npc,stress:v})}),
-        e("div",{style:{marginTop:8}},
-          e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
+        e("div",{style:{marginTop:8}},e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
       ))
     )
   );
 }
 
 // ── Reference Tab ─────────────────────────────────────────────────────────────
-function ReferenceTab({pcs,gmFate,update,roller}) {
-  const setGmFate=v=>update(s=>({...s,gmFate:v}));
+function ReferenceTab({pcs,gmFate,update,roller}){
   const {faces,rolling,result,animKey,history,doRoll}=roller;
+  const col=result?(result.total>=4?C.accent:result.total<0?C.red:C.text):C.text;
   const refs=[
     {t:"Four Outcomes",items:[["Fail","Fail or succeed at major cost"],["Tie (0 shifts)","Succeed at minor cost"],["Succeed (1–2 shifts)","Succeed with no cost"],["Succeed with Style (3+)","Succeed with additional benefit"]]},
     {t:"Aspect Types",items:[["Game aspects","Permanent, made during game creation"],["Character aspects","Permanent, during character creation"],["Situation aspects","Last for a scene or until overcome"],["Boosts","Last until invoked once"],["Consequences","Last until recovered"]]},
@@ -599,117 +425,80 @@ function ReferenceTab({pcs,gmFate,update,roller}) {
     {t:"Consequences",items:[["Mild (−2)","Overcome Fair (+2), one scene"],["Moderate (−4)","Overcome Great (+4), one session"],["Severe (−6)","Overcome Fantastic (+6), one scenario"]]},
     {t:"Earning Fate Points",items:[["Accept a compel","—"],["Aspects invoked against you","—"],["Concede a conflict","—"]]},
   ];
-  const col=result?(result.total>=4?C.accent:result.total<0?C.red:C.text):C.text;
   return e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
     e("div",null,
       e("div",{style:card},
         e("div",{style:secHead()},"Fate Economy"),
-        e("div",{style:{marginBottom:14}},e(FateCounter,{value:gmFate,onChange:setGmFate,label:"GM Fate Pool"})),
+        e("div",{style:{marginBottom:14}},e(FateCounter,{value:gmFate,onChange:v=>update(s=>({...s,gmFate:v})),label:"GM Fate Pool"})),
         e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:13}},
-          e("thead",null,e("tr",{style:{borderBottom:`2px solid ${C.border}`}},
-            e("th",{style:{textAlign:"left",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"PC"),
-            e("th",{style:{textAlign:"center",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"Fate")
-          )),
-          e("tbody",null,pcs.map(pc=>e("tr",{key:pc.id,style:{borderBottom:`1px solid ${C.border}`}},
-            e("td",{style:{padding:"6px 8px"}},pc.name||"Unnamed"),
-            e("td",{style:{textAlign:"center",padding:"6px 8px",fontWeight:800,color:C.accent}},pc.fate)
-          )))
+          e("thead",null,e("tr",{style:{borderBottom:"2px solid "+C.border}},e("th",{style:{textAlign:"left",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"PC"),e("th",{style:{textAlign:"center",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"Fate"))),
+          e("tbody",null,pcs.map(pc=>e("tr",{key:pc.id,style:{borderBottom:"1px solid "+C.border}},e("td",{style:{padding:"6px 8px"}},pc.name||"Unnamed"),e("td",{style:{textAlign:"center",padding:"6px 8px",fontWeight:800,color:C.accent}},pc.fate))))
         )
       ),
       e("div",{style:card},
         e("div",{style:secHead()},"The Ladder"),
         e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:13}},
-          e("tbody",null,LADDER.map(([v,l])=>e("tr",{key:v,
-            style:{borderBottom:`1px solid ${C.border}`,background:v===0?"#f0f4f8":"transparent"}},
-            e("td",{style:{padding:"4px 10px",fontWeight:800,
-              color:v>=4?C.accent:v<0?C.red:C.text,width:36,textAlign:"right"}},v>=0?`+${v}`:v),
-            e("td",{style:{padding:"4px 10px",fontWeight:v>=5?700:400}},l)
-          )))
+          e("tbody",null,LADDER.map(([v,l])=>e("tr",{key:v,style:{borderBottom:"1px solid "+C.border,background:v===0?"#f0f4f8":"transparent"}},
+            e("td",{style:{padding:"4px 10px",fontWeight:800,color:v>=4?C.accent:v<0?C.red:C.text,width:36,textAlign:"right"}},v>=0?"+"+v:v),
+            e("td",{style:{padding:"4px 10px",fontWeight:v>=5?700:400}},l))))
         )
       ),
       e("div",{style:card},
         e("div",{style:secHead()},"Dice Roller"),
         e("div",{style:{textAlign:"center",padding:"10px 0 4px"}},
-          e("button",{style:{background:C.accent,color:C.header,border:"none",borderRadius:4,
-            padding:"9px 26px",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"},
-            onClick:()=>doRoll(),disabled:rolling},rolling?"Rolling…":"Roll 4dF"),
-          e("div",{style:{marginTop:16}},
-            e(DiceRow,{faces:rolling?["","","",""]:faces,animKey,rolling})
-          ),
+          e("button",{style:{...btnStyle(),fontSize:14,padding:"9px 26px"},onClick:()=>doRoll(),disabled:rolling},rolling?"Rolling…":"Roll 4dF"),
+          e("div",{style:{marginTop:16}},e(DiceRow,{faces:rolling?["","","",""]:faces,animKey,rolling})),
           !rolling&&result&&e("div",{style:{marginTop:12,textAlign:"center"}},
-            result.bonus!==0&&e("div",{style:{fontSize:12,color:C.muted}},
-              `Dice ${result.diceSum>=0?"+":""}${result.diceSum} + Skill ${result.bonus>=0?"+":""}${result.bonus}`),
-            e("div",{style:{fontSize:38,fontWeight:900,color:col,lineHeight:1,marginTop:4}},
-              result.total>=0?`+${result.total}`:result.total),
+            result.bonus!==0&&e("div",{style:{fontSize:12,color:C.muted}},"Dice "+(result.diceSum>=0?"+":"")+result.diceSum+" + Skill "+(result.bonus>=0?"+":"")+result.bonus),
+            e("div",{style:{fontSize:38,fontWeight:900,color:col,lineHeight:1,marginTop:4}},(result.total>=0?"+":"")+result.total),
             e("div",{style:{fontSize:17,fontWeight:700,color:col,marginTop:3}},ladderName(result.total))
           )
         ),
-        history.length>0&&e("div",{style:{marginTop:10,borderTop:`1px solid ${C.border}`,paddingTop:8}},
+        history.length>0&&e("div",{style:{marginTop:10,borderTop:"1px solid "+C.border,paddingTop:8}},
           e("div",{style:lbl},"History"),
-          history.map((r,i)=>e("div",{key:i,style:{display:"flex",justifyContent:"space-between",
-            fontSize:12,padding:"3px 0",borderBottom:`1px solid ${C.border}`,color:C.muted}},
+          history.map((r,i)=>e("div",{key:i,style:{display:"flex",justifyContent:"space-between",fontSize:12,padding:"3px 0",borderBottom:"1px solid "+C.border,color:C.muted}},
             e("span",null,r.dice.map(f=>f||"○").join(" ")),
-            e("span",{style:{fontWeight:700,color:r.total>=4?C.accent:r.total<0?C.red:C.text}},
-              (r.total>=0?"+":"")+r.total+" "+ladderName(r.total)),
-            e("span",null,r.pcName||""),
-            e("span",null,r.ts)
-          ))
+            e("span",{style:{fontWeight:700,color:r.total>=4?C.accent:r.total<0?C.red:C.text}},(r.total>=0?"+":"")+r.total+" "+ladderName(r.total)),
+            e("span",null,r.pcName||""),e("span",null,r.ts)))
         )
       )
     ),
     e("div",null,refs.map(sec=>e("div",{key:sec.t,style:card},
       e("div",{style:secHead()},sec.t),
-      sec.items.map(([k,v])=>e("div",{key:k,style:{padding:"4px 0",borderBottom:`1px solid ${C.border}`,fontSize:13}},
-        e("strong",null,k),v!=="—"?`: ${v}`:""
-      ))
+      sec.items.map(([k,v])=>e("div",{key:k,style:{padding:"4px 0",borderBottom:"1px solid "+C.border,fontSize:13}},e("strong",null,k),v!=="—"?": "+v:""))
     )))
   );
 }
 
 // ── App ───────────────────────────────────────────────────────────────────────
-const TABS=["Party","Scene","NPCs","Reference"];
-function App() {
-  const [sessionCode, setSessionCode] = useState(null);
-  const [initialState, setInitialState] = useState(null);
-  const [tab, setTab] = useState("Party");
-  const [modalOpen, setModalOpen] = useState(false);
-  const roller = useDiceRoller();
-  const {gameState, updateState, syncStatus} = useFirebaseSession(sessionCode, initialState);
+function App(){
+  const [sessionCode,setSessionCode]=useState(null);
+  const [initialData,setInitialData]=useState(null);
+  const [tab,setTab]=useState("Party");
+  const [modalOpen,setModalOpen]=useState(false);
+  const roller=useDiceRoller();
+  const {gameState,updateState,syncStatus}=useFirebaseSession(sessionCode,initialData);
 
-  const handleRoll = (bonus, tierLabel, pcName, onDone) => {
-    roller.doRoll(bonus, tierLabel, pcName, onDone);
-    setModalOpen(true);
-  };
+  const handleRoll=(bonus,tierLabel,pcName,onDone)=>{roller.doRoll(bonus,tierLabel,pcName,onDone);setModalOpen(true);};
 
-  if(!sessionCode) return e(Lobby,{onJoin:(code, state)=>{ setInitialState(state); setSessionCode(code); }});
-  if(!gameState) return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",
-    flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
-    e("div",{style:{width:48,height:48,background:C.accent,borderRadius:10,display:"flex",
-      alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:24,color:C.header}},"F"),
+  if(!sessionCode)return e(Lobby,{onJoin:(code,data)=>{setInitialData(data);setSessionCode(code);}});
+  if(!gameState)return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
+    e("div",{style:{width:48,height:48,background:C.accent,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:24,color:C.header}},"F"),
     e("div",{style:{fontSize:16,color:"#8fa8c0"}},"Connecting to session…"),
     e("div",{style:{fontSize:12,color:"#4a6080"}},"Session: "+sessionCode)
   );
 
   const {pcs,npcs,scene,gmFate}=gameState;
-  const tabBtn=(t)=>e("button",{key:t,
-    style:{padding:"10px 16px",cursor:"pointer",fontWeight:600,fontSize:13,
-      color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",
-      borderBottom:tab===t?`2px solid ${C.accent}`:"2px solid transparent",fontFamily:"inherit"},
-    onClick:()=>setTab(t)},t);
+  const TABS=["Party","Scene","NPCs","Reference"];
 
   return e("div",{style:{fontFamily:"'Segoe UI',system-ui,sans-serif",background:C.bg,minHeight:"100vh",color:C.text}},
-    e("div",{style:{background:C.header,color:"#fff",padding:"12px 20px",display:"flex",
-      alignItems:"center",gap:12,borderBottom:`3px solid ${C.accent}`}},
-      e("div",{style:{width:32,height:32,background:C.accent,borderRadius:6,display:"flex",
-        alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:18,color:C.header,flexShrink:0}},"F"),
-      e("div",null,
-        e("div",{style:{margin:0,fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),
-        e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")
-      ),
+    e("div",{style:{background:C.header,color:"#fff",padding:"12px 20px",display:"flex",alignItems:"center",gap:12,borderBottom:"3px solid "+C.accent}},
+      e("div",{style:{width:32,height:32,background:C.accent,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:18,color:C.header,flexShrink:0}},"F"),
+      e("div",null,e("div",{style:{margin:0,fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
       e(SyncBadge,{status:syncStatus,code:sessionCode})
     ),
     e("div",{style:{display:"flex",background:C.header,padding:"0 16px",borderBottom:"1px solid #2a3f55"}},
-      TABS.map(tabBtn)
+      TABS.map(t=>e("button",{key:t,style:{padding:"10px 16px",cursor:"pointer",fontWeight:600,fontSize:13,color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",borderBottom:tab===t?"2px solid "+C.accent:"2px solid transparent"},onClick:()=>setTab(t)},t))
     ),
     e("div",{style:{padding:16,maxWidth:1200,margin:"0 auto"}},
       e("div",{style:{display:tab==="Party"?"block":"none"}},e(PartyTab,{pcs,update:updateState,onRoll:handleRoll})),
@@ -717,36 +506,28 @@ function App() {
       e("div",{style:{display:tab==="NPCs"?"block":"none"}},e(NPCTab,{npcs,update:updateState,onRoll:handleRoll})),
       e("div",{style:{display:tab==="Reference"?"block":"none"}},e(ReferenceTab,{pcs,gmFate,update:updateState,roller}))
     ),
-    modalOpen && e("div",{style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",
-      display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000},
-      onClick:()=>{if(!roller.rolling)setModalOpen(false);}},
-      e("div",{style:{background:"#fff",borderRadius:14,padding:32,minWidth:340,
-        boxShadow:"0 12px 48px rgba(0,0,0,0.35)",textAlign:"center",
-        borderTop:`4px solid ${C.accent}`},onClick:ev=>ev.stopPropagation()},
-        roller.result&&e("div",{style:{fontSize:13,color:C.muted,marginBottom:12,fontWeight:600}},
-          roller.result.pcName+" — "+roller.result.tierLabel),
+    modalOpen&&e("div",{style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000},onClick:()=>{if(!roller.rolling)setModalOpen(false);}},
+      e("div",{style:{background:"#fff",borderRadius:14,padding:32,minWidth:340,boxShadow:"0 12px 48px rgba(0,0,0,0.35)",textAlign:"center",borderTop:"4px solid "+C.accent},onClick:ev=>ev.stopPropagation()},
+        roller.result&&e("div",{style:{fontSize:13,color:C.muted,marginBottom:12,fontWeight:600}},roller.result.pcName+" — "+roller.result.tierLabel),
         e(DiceRow,{faces:roller.rolling?["","","",""]:roller.faces,animKey:roller.animKey,rolling:roller.rolling}),
         !roller.rolling&&e(React.Fragment,null,
           roller.result&&e("div",{style:{marginTop:12}},
-            roller.result.bonus!==0&&e("div",{style:{fontSize:12,color:C.muted,textAlign:"center"}},
-              `Dice ${roller.result.diceSum>=0?"+":""}${roller.result.diceSum} + Skill ${roller.result.bonus>=0?"+":""}${roller.result.bonus}`),
-            e("div",{style:{fontSize:38,fontWeight:900,textAlign:"center",lineHeight:1,marginTop:4,
-              color:roller.result.total>=4?C.accent:roller.result.total<0?C.red:C.text}},
-              (roller.result.total>=0?"+":"")+roller.result.total),
-            e("div",{style:{fontSize:17,fontWeight:700,textAlign:"center",marginTop:3,
-              color:roller.result.total>=4?C.accent:roller.result.total<0?C.red:C.text}},
-              ladderName(roller.result.total))
+            roller.result.bonus!==0&&e("div",{style:{fontSize:12,color:C.muted,textAlign:"center"}},"Dice "+(roller.result.diceSum>=0?"+":"")+roller.result.diceSum+" + Skill "+(roller.result.bonus>=0?"+":"")+roller.result.bonus),
+            e("div",{style:{fontSize:38,fontWeight:900,textAlign:"center",lineHeight:1,marginTop:4,color:roller.result.total>=4?C.accent:roller.result.total<0?C.red:C.text}},(roller.result.total>=0?"+":"")+roller.result.total),
+            e("div",{style:{fontSize:17,fontWeight:700,textAlign:"center",marginTop:3,color:roller.result.total>=4?C.accent:roller.result.total<0?C.red:C.text}},ladderName(roller.result.total))
           ),
-          e("button",{style:{background:C.accent,color:C.header,border:"none",borderRadius:4,
-            padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,marginTop:20,fontFamily:"inherit"},
-            onClick:()=>setModalOpen(false)},"Close")
+          e("button",{style:{...btnStyle(),marginTop:20},onClick:()=>setModalOpen(false)},"Close")
         )
       )
     )
   );
 }
 
-createRoot(document.getElementById("root")).render(e(App));
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+
+} catch(err) {
+  document.getElementById("root").innerHTML = '<div style="padding:40px;font-family:monospace;color:red;background:#fff;"><h2>Startup Error</h2><pre>'+err.stack+'</pre></div>';
+}
 </script>
 </body>
 </html>
