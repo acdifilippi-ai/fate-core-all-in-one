@@ -23,25 +23,17 @@
 <body>
 <div id="root"></div>
 
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18",
-    "react-dom/client": "https://esm.sh/react-dom@18/client",
-    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
-    "firebase/database": "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"
-  }
-}
-</script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const { useState, useEffect, useRef, useCallback } = React;
+const { createRoot } = ReactDOM;
+const { initializeApp, getDatabase, ref, set, onValue, get } = firebase;
 
-<script type="module">
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { createRoot } from "react-dom/client";
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, get } from "firebase/database";
-
-// ── Firebase ──────────────────────────────────────────────────────────────────
-const firebaseConfig = {
+// Firebase compat mode wrappers
+const firebaseApp = firebase.initializeApp({
   apiKey: "AIzaSyAEVrS8z7FG_80YgVZE30gMaOnPvSgpj-A",
   authDomain: "fate-core-all-in-one.firebaseapp.com",
   databaseURL: "https://fate-core-all-in-one-default-rtdb.firebaseio.com",
@@ -49,9 +41,14 @@ const firebaseConfig = {
   storageBucket: "fate-core-all-in-one.firebasestorage.app",
   messagingSenderId: "804606534321",
   appId: "1:804606534321:web:57828b1d1bd4edfc5e3890"
-};
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getDatabase(firebaseApp);
+});
+const db = firebase.database();
+const dbRef = (path) => db.ref(path);
+const dbSet = (r, val) => r.set(val);
+const dbGet = (r) => r.get();
+const dbOnValue = (r, cb, errCb) => { r.on("value", snap => cb(snap), errCb); return () => r.off("value"); };
+
+// ── Firebase ──────────────────────────────────────────────────────────────────
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const SKILLS = ["Athletics","Burglary","Contacts","Crafts","Deceive","Drive",
@@ -115,22 +112,16 @@ function useFirebaseSession(sessionCode) {
     if (!sessionCode) return;
     setGameState(null);
     setSyncStatus("connecting");
-    const sessionRef = ref(db, `sessions/${sessionCode}`);
-    const unsub = onValue(sessionRef, snap => {
+    const sessionRef = dbRef(`sessions/${sessionCode}`);
+    const unsub = dbOnValue(sessionRef, snap => {
       const val = snap.val();
       if (val) {
-        // Only accept remote updates if we're not mid-write
-        if (!isLocalWrite.current) {
-          setGameState(val);
-        }
+        if (!isLocalWrite.current) setGameState(val);
         setSyncStatus("live");
       } else {
-        // Session exists but empty — write default state
         const init = defaultState();
-        set(sessionRef, init).then(() => {
-          setGameState(init);
-          setSyncStatus("live");
-        }).catch(() => setSyncStatus("error"));
+        dbSet(sessionRef, init).then(() => { setGameState(init); setSyncStatus("live"); })
+          .catch(() => setSyncStatus("error"));
       }
     }, () => setSyncStatus("error"));
     return () => unsub();
@@ -145,7 +136,7 @@ function useFirebaseSession(sessionCode) {
       if (writeTimer.current) clearTimeout(writeTimer.current);
       writeTimer.current = setTimeout(async () => {
         try {
-          await set(ref(db, `sessions/${sessionCode}`), next);
+        await dbSet(dbRef(`sessions/${sessionCode}`), next);
           setSyncStatus("live");
         } catch(e) { setSyncStatus("error"); }
         isLocalWrite.current = false;
@@ -168,7 +159,7 @@ function Lobby({ onJoin }) {
     setLoading(true);
     const sessionCode = genCode();
     try {
-      await set(ref(db, `sessions/${sessionCode}`), defaultState());
+      await dbSet(dbRef(`sessions/${sessionCode}`), defaultState());
       onJoin(sessionCode);
     } catch(e) { setError("Failed to create session."); setLoading(false); }
   };
@@ -178,7 +169,7 @@ function Lobby({ onJoin }) {
     if (!c) { setError("Enter a session code."); return; }
     setLoading(true);
     try {
-      const snap = await get(ref(db, `sessions/${c}`));
+      const snap = await dbGet(dbRef(`sessions/${c}`));
       if (!snap.exists()) { setError("Session not found."); setLoading(false); return; }
       onJoin(c);
     } catch(e) { setError("Could not connect."); setLoading(false); }
