@@ -159,8 +159,9 @@ function Lobby({ onJoin }) {
     setLoading(true);
     const sessionCode = genCode();
     try {
-      await dbSet(dbRef(`sessions/${sessionCode}`), defaultState());
-      onJoin(sessionCode);
+      const init = defaultState();
+      await dbSet(dbRef(`sessions/${sessionCode}`), init);
+      onJoin(sessionCode, init);
     } catch(e) { setError("Failed to create session."); setLoading(false); }
   };
 
@@ -171,7 +172,7 @@ function Lobby({ onJoin }) {
     try {
       const snap = await dbGet(dbRef(`sessions/${c}`));
       if (!snap.exists()) { setError("Session not found."); setLoading(false); return; }
-      onJoin(c);
+      onJoin(c, snap.val());
     } catch(e) { setError("Could not connect."); setLoading(false); }
   };
 
@@ -668,18 +669,19 @@ function ReferenceTab({pcs,gmFate,update,roller}) {
 // ── App ───────────────────────────────────────────────────────────────────────
 const TABS=["Party","Scene","NPCs","Reference"];
 function App() {
-  const [sessionCode,setSessionCode]=useState(null);
-  const [tab,setTab]=useState("Party");
-  const [modalOpen,setModalOpen]=useState(false);
-  const roller=useDiceRoller();
-  const {gameState,updateState,syncStatus}=useFirebaseSession(sessionCode);
+  const [sessionCode, setSessionCode] = useState(null);
+  const [initialState, setInitialState] = useState(null);
+  const [tab, setTab] = useState("Party");
+  const [modalOpen, setModalOpen] = useState(false);
+  const roller = useDiceRoller();
+  const {gameState, updateState, syncStatus} = useFirebaseSession(sessionCode, initialState);
 
-  const handleRoll=(bonus,tierLabel,pcName,onDone)=>{
-    roller.doRoll(bonus,tierLabel,pcName,onDone);
+  const handleRoll = (bonus, tierLabel, pcName, onDone) => {
+    roller.doRoll(bonus, tierLabel, pcName, onDone);
     setModalOpen(true);
   };
 
-  if(!sessionCode) return e(Lobby,{onJoin:code=>setSessionCode(code)});
+  if(!sessionCode) return e(Lobby,{onJoin:(code, state)=>{ setInitialState(state); setSessionCode(code); }});
   if(!gameState) return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",
     flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
     e("div",{style:{width:48,height:48,background:C.accent,borderRadius:10,display:"flex",
