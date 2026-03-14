@@ -113,18 +113,32 @@ function useFirebaseSession(sessionCode) {
 
   useEffect(() => {
     if (!sessionCode) return;
+    setGameState(null);
+    setSyncStatus("connecting");
     const sessionRef = ref(db, `sessions/${sessionCode}`);
     const unsub = onValue(sessionRef, snap => {
-      if (isLocalWrite.current) return;
       const val = snap.val();
-      if (val) { setGameState(val); setSyncStatus("live"); }
-      else { setSyncStatus("error"); }
+      if (val) {
+        // Only accept remote updates if we're not mid-write
+        if (!isLocalWrite.current) {
+          setGameState(val);
+        }
+        setSyncStatus("live");
+      } else {
+        // Session exists but empty — write default state
+        const init = defaultState();
+        set(sessionRef, init).then(() => {
+          setGameState(init);
+          setSyncStatus("live");
+        }).catch(() => setSyncStatus("error"));
+      }
     }, () => setSyncStatus("error"));
     return () => unsub();
   }, [sessionCode]);
 
   const updateState = useCallback(updater => {
     setGameState(prev => {
+      if (!prev) return prev;
       const next = typeof updater === "function" ? updater(prev) : updater;
       isLocalWrite.current = true;
       setSyncStatus("syncing");
@@ -676,7 +690,12 @@ function App() {
 
   if(!sessionCode) return e(Lobby,{onJoin:code=>setSessionCode(code)});
   if(!gameState) return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",
-    alignItems:"center",justifyContent:"center",color:"#fff",fontSize:16}},"Connecting…");
+    flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
+    e("div",{style:{width:48,height:48,background:C.accent,borderRadius:10,display:"flex",
+      alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:24,color:C.header}},"F"),
+    e("div",{style:{fontSize:16,color:"#8fa8c0"}},"Connecting to session…"),
+    e("div",{style:{fontSize:12,color:"#4a6080"}},"Session: "+sessionCode)
+  );
 
   const {pcs,npcs,scene,gmFate}=gameState;
   const tabBtn=(t)=>e("button",{key:t,
