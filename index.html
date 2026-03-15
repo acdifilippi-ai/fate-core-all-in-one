@@ -8,6 +8,15 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7f8;color:#1a1a2e;min-height:100vh;}
 input,select,textarea,button{font-family:inherit;}
+input,select,textarea{font-size:16px!important;}
+.auto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px;}
+.auto-grid-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:12px;}
+.npc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px;}
+.sticky-header{position:sticky;top:0;z-index:100;}
+.stress-box{width:32px!important;height:32px!important;font-size:14px!important;}
+.invoke-box{width:26px!important;height:26px!important;font-size:12px!important;}
+.tab-bar{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
 @keyframes spin0{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-30px,-20px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(540deg) rotateY(360deg) rotateZ(180deg) translate(5px,-35px);}85%{transform:rotateX(680deg) rotateY(440deg) rotateZ(340deg) translate(-3px,-5px);}100%{transform:rotateX(720deg) rotateY(480deg) rotateZ(360deg) translate(0,0);opacity:1;}}
 @keyframes spin1{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(20px,-40px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(400deg) rotateY(520deg) rotateZ(250deg) translate(-8px,-28px);}85%{transform:rotateX(660deg) rotateY(600deg) rotateZ(330deg) translate(4px,-4px);}100%{transform:rotateX(720deg) rotateY(640deg) rotateZ(360deg) translate(0,0);opacity:1;}}
 @keyframes spin2{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate(-10px,30px);opacity:0;}20%{opacity:1;}60%{transform:rotateX(600deg) rotateY(280deg) rotateZ(320deg) translate(12px,-22px);}85%{transform:rotateX(700deg) rotateY(380deg) rotateZ(350deg) translate(-2px,-3px);}100%{transform:rotateX(720deg) rotateY(400deg) rotateZ(360deg) translate(0,0);opacity:1;}}
@@ -128,11 +137,11 @@ function FateCounter({value,onChange,label}){
 }
 
 function StressTrack({boxes,onChange,label}){
-  return e("div",{style:{marginBottom:6}},
+  return e("div",{style:{marginBottom:8}},
     e("div",{style:lbl},label),
-    e("div",{style:{display:"flex",gap:4,marginTop:3}},
-      boxes.map((c,i)=>e("div",{key:i,
-        style:{width:24,height:24,border:`2px solid ${c?C.red:C.border}`,borderRadius:4,cursor:"pointer",background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0},
+    e("div",{style:{display:"flex",gap:6,marginTop:4,flexWrap:"wrap"}},
+      boxes.map((c,i)=>e("div",{key:i,className:"stress-box",
+        style:{width:32,height:32,border:`2px solid ${c?C.red:C.border}`,borderRadius:4,cursor:"pointer",background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:14,flexShrink:0},
         onClick:()=>{const n=[...boxes];n[i]=!n[i];onChange(n);}},c?"✕":""))
     )
   );
@@ -300,7 +309,7 @@ function PCCard({pc,onChange,onRemove,onRoll}){
       e("button",{style:{...ghost,color:C.red,flexShrink:0,padding:"4px 8px"},onClick:onRemove},"✕")
     ),
     !pc.collapsed&&e("div",{style:{marginTop:12}},
-      e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+      e("div",{className:"auto-grid"},
         e("div",null,
           e("div",{style:secHead()},"Aspects"),
           [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
@@ -351,8 +360,8 @@ function SceneTab({scene,update}){
   const remA=i=>upd({aspects:toArr(scene.aspects).filter((_,j)=>j!==i)});
   const updAT=(i,v)=>{const a=[...toArr(scene.aspects)];a[i]={...a[i],text:v};upd({aspects:a});};
   const togAB=(i,bi)=>{const a=[...toArr(scene.aspects)];const b=[...toArr(a[i].boxes)];b[bi]=!b[bi];a[i]={...a[i],boxes:b};upd({aspects:a});};
-  const ibox=c=>({width:20,height:20,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:10,flexShrink:0});
-  return e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
+  return e("div",{className:"auto-grid-wide"},
     e("div",null,
       e("div",{style:card},
         e("div",{style:secHead()},"Scene"),
@@ -404,7 +413,7 @@ function NPCTab({npcs,update,onRoll}){
       e("button",{style:btnStyle(),onClick:add},"+ Add NPC")
     ),
     npcs.length===0&&e("div",{style:{color:C.muted,textAlign:"center",padding:40}},"No NPCs yet."),
-    e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(290px,1fr))",gap:12}},
+    e("div",{className:"npc-grid"},
       npcs.map(npc=>e("div",{key:npc.id,style:{...card,borderTop:"3px solid "+C.yellow}},
         e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},
           e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
@@ -431,7 +440,7 @@ function ReferenceTab({pcs,gmFate,update,roller}){
     {t:"Consequences",items:[["Mild (−2)","Overcome Fair (+2), one scene"],["Moderate (−4)","Overcome Great (+4), one session"],["Severe (−6)","Overcome Fantastic (+6), one scenario"]]},
     {t:"Earning Fate Points",items:[["Accept a compel","—"],["Aspects invoked against you","—"],["Concede a conflict","—"]]},
   ];
-  return e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+  return e("div",{className:"auto-grid-wide"},
     e("div",null,
       e("div",{style:card},
         e("div",{style:secHead()},"Fate Economy"),
@@ -507,8 +516,10 @@ function App(){
       e("div",null,e("div",{style:{margin:0,fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
       e(SyncBadge,{status:syncStatus,code:sessionCode})
     ),
-    e("div",{style:{display:"flex",background:C.header,padding:"0 16px",borderBottom:"1px solid #2a3f55"}},
-      TABS.map(t=>e("button",{key:t,style:{padding:"10px 16px",cursor:"pointer",fontWeight:600,fontSize:13,color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",borderBottom:tab===t?"2px solid "+C.accent:"2px solid transparent"},onClick:()=>setTab(t)},t))
+    e("div",{className:"sticky-header tab-bar",style:{background:C.header,borderBottom:"1px solid #2a3f55"}},
+      e("div",{style:{display:"flex",padding:"0 16px"}},
+        TABS.map(t=>e("button",{key:t,style:{padding:"12px 16px",cursor:"pointer",fontWeight:600,fontSize:13,color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",borderBottom:tab===t?"2px solid "+C.accent:"2px solid transparent",whiteSpace:"nowrap"},onClick:()=>setTab(t)},t))
+      )
     ),
     e("div",{style:{padding:16,maxWidth:1200,margin:"0 auto"}},
       e("div",{style:{display:tab==="Party"?"block":"none"}},e(PartyTab,{pcs,update:updateState,onRoll:handleRoll})),
