@@ -325,9 +325,9 @@ function PCCard({pc,onChange,onRemove,onRoll}){
 
 // ── Party Tab ─────────────────────────────────────────────────────────────────
 function PartyTab({pcs,update,onRoll}){
-  const add=()=>update(s=>({...s,pcs:[...s.pcs,newPC("pc"+Date.now())]}));
-  const rem=id=>update(s=>({...s,pcs:s.pcs.filter(p=>p.id!==id)}));
-  const upd=pc=>update(s=>({...s,pcs:s.pcs.map(p=>p.id===pc.id?pc:p)}));
+  const add=()=>update(s=>({...s,pcs:[...toArr(s.pcs),newPC("pc"+Date.now())]}));
+  const rem=id=>update(s=>({...s,pcs:toArr(s.pcs).filter(p=>p.id!==id)}));
+  const upd=pc=>update(s=>({...s,pcs:toArr(s.pcs).map(p=>p.id===pc.id?pc:p)}));
   return e("div",null,
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
       e("h2",{style:{margin:0,fontSize:16,fontWeight:800}},"Player Characters"),
@@ -395,9 +395,9 @@ function SceneTab({scene,update}){
 
 // ── NPC Tab ───────────────────────────────────────────────────────────────────
 function NPCTab({npcs,update,onRoll}){
-  const add=()=>update(s=>({...s,npcs:[...s.npcs,newNPC("npc"+Date.now())]}));
-  const rem=id=>update(s=>({...s,npcs:s.npcs.filter(x=>x.id!==id)}));
-  const upd=npc=>update(s=>({...s,npcs:s.npcs.map(x=>x.id===npc.id?npc:x)}));
+  const add=()=>update(s=>({...s,npcs:[...toArr(s.npcs),newNPC("npc"+Date.now())]}));
+  const rem=id=>update(s=>({...s,npcs:toArr(s.npcs).filter(x=>x.id!==id)}));
+  const upd=npc=>update(s=>({...s,npcs:toArr(s.npcs).map(x=>x.id===npc.id?npc:x)}));
   return e("div",null,
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
       e("h2",{style:{margin:0,fontSize:16,fontWeight:800}},"NPCs"),
