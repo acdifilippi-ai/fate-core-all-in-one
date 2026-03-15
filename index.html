@@ -206,7 +206,7 @@ function NPCSkillRow({skills,onChange,onRoll,npcName}){
           style:{width:28,flexShrink:0,background:cur.name?(isSecret?"#9b2226":C.accent):"#ccc",color:C.header,border:"none",borderRadius:4,padding:"3px 0",cursor:cur.name?"pointer":"default",fontSize:13,fontWeight:700,textAlign:"center"}},"🎲"),
         e("span",{style:{width:28,fontSize:12,fontWeight:800,color:isSecret?"#9b2226":C.accent,flexShrink:0,textAlign:"right"}},lvl.label),
         e("select",{value:cur.name,style:{...sel,color:isSecret?"#9b2226":undefined,fontWeight:isSecret?700:400},
-          onChange:ev=>{const ns=[...skills];ns[i]={...ns[i],name:ev.target.value,bonus:lvl.bonus};onChange(ns);}},
+          onChange:ev=>{const ns=[...toArr(skills)];ns[i]={...ns[i],name:ev.target.value,bonus:lvl.bonus};onChange(ns);}},
           e("option",{value:""},"—"),available.map(sk=>e("option",{key:sk,value:sk,style:sk==="???"?{fontWeight:700,color:"#9b2226"}:{}},sk)))
       );
     })
@@ -347,10 +347,10 @@ function PartyTab({pcs,update,onRoll}){
 // ── Scene Tab ─────────────────────────────────────────────────────────────────
 function SceneTab({scene,update}){
   const upd=patch=>update(s=>({...s,scene:{...s.scene,...patch}}));
-  const addA=()=>upd({aspects:[...scene.aspects,{text:"",boxes:[false,false]}]});
-  const remA=i=>upd({aspects:scene.aspects.filter((_,j)=>j!==i)});
-  const updAT=(i,v)=>{const a=[...scene.aspects];a[i]={...a[i],text:v};upd({aspects:a});};
-  const togAB=(i,bi)=>{const a=[...scene.aspects];const b=[...a[i].boxes];b[bi]=!b[bi];a[i]={...a[i],boxes:b};upd({aspects:a});};
+  const addA=()=>upd({aspects:[...toArr(scene.aspects),{text:"",boxes:[false,false]}]});
+  const remA=i=>upd({aspects:toArr(scene.aspects).filter((_,j)=>j!==i)});
+  const updAT=(i,v)=>{const a=[...toArr(scene.aspects)];a[i]={...a[i],text:v};upd({aspects:a});};
+  const togAB=(i,bi)=>{const a=[...toArr(scene.aspects)];const b=[...toArr(a[i].boxes)];b[bi]=!b[bi];a[i]={...a[i],boxes:b};upd({aspects:a});};
   const ibox=c=>({width:20,height:20,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:10,flexShrink:0});
   return e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
     e("div",null,
@@ -370,16 +370,16 @@ function SceneTab({scene,update}){
         e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Zones"),e("button",{style:btnStyle(),onClick:()=>upd({zones:[...scene.zones,""]})},"+")),
         scene.zones.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No zones."),
         scene.zones.map((z,i)=>e("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
-          e("input",{value:z,onChange:ev=>{const zz=[...scene.zones];zz[i]=ev.target.value;upd({zones:zz});},placeholder:"Zone "+(i+1)+"…",style:inp}),
-          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({zones:scene.zones.filter((_,j)=>j!==i)})},"✕")))
+          e("input",{value:z,onChange:ev=>{const zz=[...toArr(scene.zones)];zz[i]=ev.target.value;upd({zones:zz});},placeholder:"Zone "+(i+1)+"…",style:inp}),
+          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({zones:toArr(scene.zones).filter((_,j)=>j!==i)})},"✕")))
       ),
       e("div",{style:card},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Boosts"),e("button",{style:btnStyle(),onClick:()=>upd({boosts:[...scene.boosts,{label:"",player:""}]})},"+")),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Boosts"),e("button",{style:btnStyle(),onClick:()=>upd({boosts:[...toArr(scene.boosts),{label:"",player:""}]})},"+")),
         scene.boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No boosts."),
         scene.boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:8,alignItems:"center",marginBottom:6}},
-          e("input",{value:b.label,onChange:ev=>{const bb=[...scene.boosts];bb[i]={...bb[i],label:ev.target.value};upd({boosts:bb});},placeholder:"Boost name…",style:inp}),
-          e("input",{value:b.player,onChange:ev=>{const bb=[...scene.boosts];bb[i]={...bb[i],player:ev.target.value};upd({boosts:bb});},placeholder:"Player…",style:{...inp,width:110}}),
-          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({boosts:scene.boosts.filter((_,j)=>j!==i)})},"✕")))
+          e("input",{value:b.label,onChange:ev=>{const bb=[...toArr(scene.boosts)];bb[i]={...bb[i],label:ev.target.value};upd({boosts:bb});},placeholder:"Boost name…",style:inp}),
+          e("input",{value:b.player,onChange:ev=>{const bb=[...toArr(scene.boosts)];bb[i]={...bb[i],player:ev.target.value};upd({boosts:bb});},placeholder:"Player…",style:{...inp,width:110}}),
+          e("button",{style:{...ghost,color:C.red},onClick:()=>upd({boosts:toArr(scene.boosts).filter((_,j)=>j!==i)})},"✕")))
       )
     ),
     e("div",null,
