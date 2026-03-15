@@ -113,6 +113,7 @@ const btnStyle=(col)=>({background:col||C.accent,color:col===C.red?"#fff":C.head
 const ghost={background:"none",border:`1px solid ${C.border}`,borderRadius:4,padding:"5px 10px",cursor:"pointer",fontSize:12,color:C.muted};
 
 const e=React.createElement;
+const toArr=v=>v?(Array.isArray(v)?v:Object.values(v)):[];
 
 // ── Shared components ─────────────────────────────────────────────────────────
 function FateCounter({value,onChange,label}){
@@ -274,9 +275,14 @@ function SyncBadge({status,code}){
 // ── PC Card ───────────────────────────────────────────────────────────────────
 function PCCard({pc,onChange,onRemove,onRoll}){
   const upd=(f,v)=>onChange({...pc,[f]:v});
-  const updA=(i,v)=>{const a=[...pc.aspects];a[i]=v;upd("aspects",a);};
-  const updS=(i,v)=>{const st=[...pc.stunts];st[i]=v;upd("stunts",st);};
+  const updA=(i,v)=>{const a=toArr(pc.aspects);a[i]=v;upd("aspects",a);};
+  const updS=(i,v)=>{const st=toArr(pc.stunts);st[i]=v;upd("stunts",st);};
   const handleRoll=(bonus,tierLabel,pcName)=>onRoll(bonus,tierLabel,pcName,r=>onChange({...pc,lastRoll:r}));
+  const aspects=toArr(pc.aspects);
+  const stunts=toArr(pc.stunts);
+  const physStress=toArr(pc.physStress);
+  const mentStress=toArr(pc.mentStress);
+  const skills=toArr(pc.skills).map(r=>toArr(r));
 
   return e("div",{style:{...card,borderTop:"3px solid "+C.accent,marginBottom:10}},
     e("div",{style:{display:"flex",gap:10,alignItems:"center"}},
@@ -298,18 +304,18 @@ function PCCard({pc,onChange,onRemove,onRoll}){
         e("div",null,
           e("div",{style:secHead()},"Aspects"),
           [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
-          pc.aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},e("div",{style:lbl},"Aspect "+(i+1)),e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
+          aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},e("div",{style:lbl},"Aspect "+(i+1)),e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
           e("div",{style:{marginTop:10}},
             e("div",{style:secHead()},"Stress & Consequences"),
-            e(StressTrack,{boxes:pc.physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)}),
-            e(StressTrack,{boxes:pc.mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}),
+            e(StressTrack,{boxes:physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)}),
+            e(StressTrack,{boxes:mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}),
             e("div",{style:{marginTop:8}},[["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:5}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp}))))
           )
         ),
         e("div",null,
           e("div",{style:secHead()},"Skills"),
-          e(SkillPyramid,{skills:pc.skills,onChange:v=>upd("skills",v),onRoll:handleRoll,pcName:pc.name||"Unnamed"}),
-          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Stunts"),pc.stunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),e("input",{value:st,onChange:ev=>updS(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))),
+          e(SkillPyramid,{skills:skills,onChange:v=>upd("skills",v),onRoll:handleRoll,pcName:pc.name||"Unnamed"}),
+          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Stunts"),stunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),e("input",{value:st,onChange:ev=>updS(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))),
           e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta}))
         )
       )
@@ -406,8 +412,8 @@ function NPCTab({npcs,update,onRoll}){
         ),
         e("div",{style:{marginBottom:6}},e("div",{style:lbl},"High Concept"),e("input",{value:npc.highConcept,onChange:ev=>upd({...npc,highConcept:ev.target.value}),placeholder:"High concept…",style:inp})),
         e("div",{style:{marginBottom:10}},e("div",{style:lbl},"Trouble"),e("input",{value:npc.trouble,onChange:ev=>upd({...npc,trouble:ev.target.value}),placeholder:"Trouble…",style:inp})),
-        e(NPCSkillRow,{skills:npc.npcSkills,onChange:v=>upd({...npc,npcSkills:v}),onRoll,npcName:npc.name||"NPC"}),
-        e(StressTrack,{boxes:npc.stress,label:"Stress",onChange:v=>upd({...npc,stress:v})}),
+        e(NPCSkillRow,{skills:toArr(npc.npcSkills),onChange:v=>upd({...npc,npcSkills:v}),onRoll,npcName:npc.name||"NPC"}),
+        e(StressTrack,{boxes:toArr(npc.stress),label:"Stress",onChange:v=>upd({...npc,stress:v})}),
         e("div",{style:{marginTop:8}},e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
       ))
     )
@@ -488,7 +494,11 @@ function App(){
     e("div",{style:{fontSize:12,color:"#4a6080"}},"Session: "+sessionCode)
   );
 
-  const {pcs,npcs,scene,gmFate}=gameState;
+  const pcs=toArr(gameState.pcs);
+  const npcs=toArr(gameState.npcs);
+  const scene=gameState.scene||{name:"",aspects:[],zones:[],boosts:[],hook:"",setting:"",toneTags:""};
+  const safeScene={...scene,aspects:toArr(scene.aspects),zones:toArr(scene.zones),boosts:toArr(scene.boosts)};
+  const gmFate=gameState.gmFate||0;
   const TABS=["Party","Scene","NPCs","Reference"];
 
   return e("div",{style:{fontFamily:"'Segoe UI',system-ui,sans-serif",background:C.bg,minHeight:"100vh",color:C.text}},
@@ -502,7 +512,7 @@ function App(){
     ),
     e("div",{style:{padding:16,maxWidth:1200,margin:"0 auto"}},
       e("div",{style:{display:tab==="Party"?"block":"none"}},e(PartyTab,{pcs,update:updateState,onRoll:handleRoll})),
-      e("div",{style:{display:tab==="Scene"?"block":"none"}},e(SceneTab,{scene,update:updateState})),
+      e("div",{style:{display:tab==="Scene"?"block":"none"}},e(SceneTab,{scene:safeScene,update:updateState})),
       e("div",{style:{display:tab==="NPCs"?"block":"none"}},e(NPCTab,{npcs,update:updateState,onRoll:handleRoll})),
       e("div",{style:{display:tab==="Reference"?"block":"none"}},e(ReferenceTab,{pcs,gmFate,update:updateState,roller}))
     ),
