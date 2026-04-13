@@ -9,9 +9,14 @@
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7f8;color:#1a1a2e;min-height:100vh;}
 input,select,textarea,button{font-family:inherit;}
 input,select,textarea{font-size:16px!important;}
-.auto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px;}
-.auto-grid-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:12px;}
-.npc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px;}
+.auto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
+.auto-grid-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:12px;}
+.npc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+@media(max-width:500px){
+  .auto-grid{grid-template-columns:1fr;}
+  .auto-grid-wide{grid-template-columns:1fr;}
+  .npc-grid{grid-template-columns:1fr;}
+}
 .sticky-header{position:sticky;top:0;z-index:100;}
 .stress-box{width:32px!important;height:32px!important;font-size:14px!important;}
 .invoke-box{width:26px!important;height:26px!important;font-size:12px!important;}
@@ -511,7 +516,7 @@ function App(){
   const TABS=["Party","Scene","NPCs","Reference"];
 
   return e("div",{style:{fontFamily:"'Segoe UI',system-ui,sans-serif",background:C.bg,minHeight:"100vh",color:C.text}},
-    e("div",{style:{background:C.header,color:"#fff",padding:"12px 20px",display:"flex",alignItems:"center",gap:12,borderBottom:"3px solid "+C.accent}},
+    e("div",{className:"sticky-header",style:{background:C.header,color:"#fff",padding:"10px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:"3px solid "+C.accent}},
       e("div",{style:{width:32,height:32,background:C.accent,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:18,color:C.header,flexShrink:0}},"F"),
       e("div",null,e("div",{style:{margin:0,fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
       e(SyncBadge,{status:syncStatus,code:sessionCode})
