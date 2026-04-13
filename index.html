@@ -102,11 +102,10 @@ function useFirebaseSession(sessionCode, initialData) {
       isLocalWrite.current = true;
       setSyncStatus("syncing");
       if (writeTimer.current) clearTimeout(writeTimer.current);
-      writeTimer.current = setTimeout(async () => {
-        try {
-          await db.ref("sessions/" + sessionCode).set(next);
+      writeTimer.current = setTimeout(function() {
+        db.ref("sessions/" + sessionCode).set(next).then(function(){
           setSyncStatus("live");
-        } catch(e) { setSyncStatus("error"); }
+        }).catch(function(){ setSyncStatus("error"); });
         isLocalWrite.current = false;
       }, 500);
       return next;
@@ -178,15 +177,15 @@ function DiceRow({faces,animKey,rolling}){
 
 function useDiceRoller(){
   const [st,setSt]=useState({faces:["","","",""],rolling:false,result:null,animKey:0,history:[]});
-  const doRoll=(bonus,tierLabel,pcName,onDone)=>{
+  const doRoll=function(bonus,tierLabel,pcName,onDone){
     bonus=bonus||0; tierLabel=tierLabel||"Plain Roll"; pcName=pcName||"";
-    setSt(s=>({...s,rolling:true,result:null,animKey:s.animKey+1}));
-    setTimeout(()=>{
+    setSt(function(s){return{...s,rolling:true,result:null,animKey:s.animKey+1};});
+    setTimeout(function(){
       const d=roll4dF();
-      const dsum=d.reduce((a,f)=>a+diceVal(f),0);
+      const dsum=d.reduce(function(a,f){return a+diceVal(f);},0);
       const total=dsum+bonus;
-      const r={dice:d,diceSum:dsum,bonus,total,tierLabel,pcName,ts:new Date().toLocaleTimeString()};
-      setSt(s=>({faces:d,rolling:false,result:r,animKey:s.animKey,history:[r,...s.history].slice(0,12)}));
+      const r={dice:d,diceSum:dsum,bonus:bonus,total:total,tierLabel:tierLabel,pcName:pcName,ts:new Date().toLocaleTimeString()};
+      setSt(function(s){return{faces:d,rolling:false,result:r,animKey:s.animKey,history:[r,...s.history].slice(0,12)};});
       if(onDone)onDone(r);
     },1100);
   };
@@ -234,25 +233,23 @@ function Lobby({onJoin}){
   const [error,setError]=useState("");
   const [loading,setLoading]=useState(false);
 
-  const createSession=async()=>{
+  const createSession=function(){
     setLoading(true);
     const sc=genCode();
     const init=defaultState();
-    try{
-      await db.ref("sessions/"+sc).set(init);
+    db.ref("sessions/"+sc).set(init).then(function(){
       onJoin(sc,init);
-    }catch(err){setError("Failed: "+err.message);setLoading(false);}
+    }).catch(function(err){setError("Failed: "+err.message);setLoading(false);});
   };
 
-  const joinSession=async()=>{
+  const joinSession=function(){
     const c=code.trim().toUpperCase();
     if(!c){setError("Enter a code.");return;}
     setLoading(true);
-    try{
-      const snap=await db.ref("sessions/"+c).get();
+    db.ref("sessions/"+c).get().then(function(snap){
       if(!snap.exists()){setError("Session not found.");setLoading(false);return;}
       onJoin(c,snap.val());
-    }catch(err){setError("Error: "+err.message);setLoading(false);}
+    }).catch(function(err){setError("Error: "+err.message);setLoading(false);});
   };
 
   return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",alignItems:"center",justifyContent:"center"}},
