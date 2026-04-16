@@ -14,6 +14,7 @@ input,select,textarea{font-size:16px!important;}
 .npc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
 @media(max-width:420px){
   .auto-grid,.auto-grid-wide,.npc-grid{grid-template-columns:1fr;}
+  .stress-row{flex-direction:column!important;}
 }
 .sticky-header{position:sticky;top:0;z-index:100;}
 .tab-bar{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -317,21 +318,11 @@ function PCCard({pc,onChange,onRemove,onRoll}){
           [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
           aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},e("div",{style:lbl},"Aspect "+(i+1)),e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
           e("div",{style:{marginTop:10}},
-            e("div",{style:secHead()},"Boosts"),
-            boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:6}},"No boosts."),
-            boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
-              e("input",{value:b.text,onChange:ev=>updBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
-              e("div",{style:{display:"flex",gap:3,flexShrink:0}},
-                toArr(b.boxes).map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togBoostBox(i,bi)},c?"✓":""))
-              ),
-              e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remBoost(i)},"✕")
-            )),
-            e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px",marginTop:4},onClick:addBoost},"+ Boost")
-          ),
-          e("div",{style:{marginTop:10}},
             e("div",{style:secHead()},"Stress & Consequences"),
-            e(StressTrack,{boxes:physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)}),
-            e(StressTrack,{boxes:mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}),
+            e("div",{className:"stress-row",style:{display:"flex",gap:16,flexWrap:"wrap"}},
+              e("div",{style:{flex:1,minWidth:160}},e(StressTrack,{boxes:physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)})),
+              e("div",{style:{flex:1,minWidth:160}},e(StressTrack,{boxes:mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}))
+            ),
             e("div",{style:{marginTop:8}},[["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:5}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp}))))
           )
         ),
@@ -345,7 +336,21 @@ function PCCard({pc,onChange,onRemove,onRoll}){
               e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})
             ))
           ),
-          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta}))
+          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta})),
+          e("div",{style:{marginTop:10}},
+            e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
+              e("div",{style:secHead()},"Boosts"),
+              e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:addBoost},"+ Boost")
+            ),
+            boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
+            boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
+              e("input",{value:b.text,onChange:ev=>updBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
+              e("div",{style:{display:"flex",gap:3,flexShrink:0}},
+                toArr(b.boxes).map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togBoostBox(i,bi)},c?"✓":""))
+              ),
+              e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remBoost(i)},"✕")
+            ))
+          )
         )
       )
     )
@@ -465,7 +470,7 @@ function ReferenceTab({pcs,gmFate,update,roller}){
   const refs=[
     {t:"Four Outcomes",items:[["Fail","Fail or succeed at major cost"],["Tie (0 shifts)","Succeed at minor cost"],["Succeed (1–2 shifts)","Succeed with no cost"],["Succeed with Style (3+)","Succeed with additional benefit"]]},
     {t:"Aspect Types",items:[["Game aspects","Permanent, made during game creation"],["Character aspects","Permanent, during character creation"],["Situation aspects","Last for a scene or until overcome"],["Boosts","Last until invoked once"],["Consequences","Last until recovered"]]},
-    {t:"Invoking Aspects",items:[["+2 bonus","Add +2 to your roll"],["Reroll","Reroll all dice"],["Teamwork","+2 to another's roll vs passive opposition"],["Obstacle","+2 to passive opposition"],["Change the Game","Declare a minor detail"]]},
+    {t:"Invoking Aspects",items:[["+2 bonus","Add +2 to your roll"],["Reroll","Reroll all dice"],["Teamwork","+2 to another's roll vs passive opposition"],["Obstacle","+2 to passive opposition"],["Change the Game","Declare a minor detail (with GM approval)"]]},
     {t:"Consequences",items:[["Mild (−2)","Overcome Fair (+2), one scene"],["Moderate (−4)","Overcome Great (+4), one session"],["Severe (−6)","Overcome Fantastic (+6), one scenario"]]},
     {t:"Earning Fate Points",items:[["Accept a compel","—"],["Aspects invoked against you","—"],["Concede a conflict","—"]]},
   ];
