@@ -66,7 +66,7 @@ const genCode=()=>{const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";return"FATE-"+Arra
 const C={accent:"#00b4cc",accentDark:"#0090a8",accentLight:"#e0f7fa",header:"#1b2a3b",bg:"#f5f7f8",card:"#ffffff",border:"#dde3e8",text:"#1a1a2e",muted:"#6b7a8d",red:"#e63946",yellow:"#f4a261",purple:"#5e60ce",sectionBg:"#1b2a3b"};
 const toArr=v=>v?(Array.isArray(v)?v:Object.values(v)):[];
 
-const newPC=id=>({id,name:"New Character",highConcept:"",trouble:"",aspects:["","",""],skills:PYRAMID.map(r=>Array(r.count).fill("")),physStress:[false,false,false,false],mentStress:[false,false,false,false],mildCon:"",moderateCon:"",severeCon:"",stunts:["","",""],extras:"",boosts:[],fate:3,lastRoll:null});
+const newPC=id=>({id,name:"New Character",highConcept:"",trouble:"",aspects:["","",""],skills:PYRAMID.map(r=>Array(r.count).fill("")),physStress:[false,false,true,true],mentStress:[false,false,true,true],mildCon:"",moderateCon:"",severeCon:"",stunts:["","",""],extras:"",boosts:[],fate:3,lastRoll:null});
 const newNPC=id=>({id,name:"NPC",highConcept:"",trouble:"",npcSkills:[{name:"",bonus:3},{name:"",bonus:2},{name:"",bonus:1}],stunts:["",""],stress:[false,false,false,false,false],fate:0});
 const defaultState=()=>({pcs:[newPC("pc1")],npcs:[],scene:{name:"",aspects:[],zones:[],hook:"",setting:"",toneTags:""},gmFate:0});
 
@@ -290,10 +290,10 @@ function PCCard({pc,onChange,onRemove,onRoll}){
   const boosts=toArr(pc.boosts);
   const handleRoll=(bonus,tierLabel,pcName)=>onRoll(bonus,tierLabel,pcName,r=>onChange({...pc,lastRoll:r}));
 
-  const addBoost=()=>upd("boosts",[...boosts,{text:"",boxes:[false,false]}]);
+  const addBoost=()=>upd("boosts",[...boosts,{text:"",used:false}]);
   const remBoost=i=>upd("boosts",boosts.filter((_,j)=>j!==i));
   const updBoostText=(i,v)=>{const b=[...boosts];b[i]={...b[i],text:v};upd("boosts",b);};
-  const togBoostBox=(i,bi)=>{const b=[...boosts];const bx=[...toArr(b[i].boxes)];bx[bi]=!bx[bi];b[i]={...b[i],boxes:bx};upd("boosts",b);};
+  const togBoost=i=>{const b=[...boosts];b[i]={...b[i],used:!b[i].used};upd("boosts",b);};
   const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
 
   return e("div",{style:{...card,borderTop:"3px solid "+C.accent,marginBottom:10}},
@@ -339,15 +339,13 @@ function PCCard({pc,onChange,onRemove,onRoll}){
           e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta})),
           e("div",{style:{marginTop:10}},
             e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
-              e("div",{style:secHead()},"Boosts"),
+              e("div",{style:secHead()},"Boost(s)"),
               e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:addBoost},"+ Boost")
             ),
             boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
             boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
+              e("div",{style:{...ibox(b.used),flexShrink:0},onClick:()=>togBoost(i)},b.used?"✓":""),
               e("input",{value:b.text,onChange:ev=>updBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
-              e("div",{style:{display:"flex",gap:3,flexShrink:0}},
-                toArr(b.boxes).map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togBoostBox(i,bi)},c?"✓":""))
-              ),
               e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remBoost(i)},"✕")
             ))
           )
