@@ -232,10 +232,7 @@ function NPCSkillRow({skills,onChange,onRoll,npcName}){
   );
 }
 
-function BoostList({boosts,onAdd,onRemove,onToggle,onTextChange}){
-  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,
-    cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",
-    justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
+function BoostList({boosts,onAdd,onRemove,onTextChange}){
   return e("div",{style:{marginTop:8}},
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
       e("div",{style:secHead()},"Boost(s)"),
@@ -243,7 +240,6 @@ function BoostList({boosts,onAdd,onRemove,onToggle,onTextChange}){
     ),
     boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
     boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
-      e("div",{style:ibox(b.used),onClick:()=>onToggle(i)},b.used?"✓":""),
       e("input",{value:b.text,onChange:ev=>onTextChange(i,ev.target.value),placeholder:"Boost…",style:inp}),
       e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>onRemove(i)},"✕")
     ))
@@ -336,10 +332,9 @@ function PCCard({pc,onChange,onRemove,onRoll}){
   const skills=toArr(pc.skills).map(r=>toArr(r));
   const boosts=toArr(pc.boosts);
   const handleRoll=(bonus,tierLabel,pcName)=>onRoll(bonus,tierLabel,pcName,r=>onChange({...pc,lastRoll:r}));
-  const addBoost=()=>upd("boosts",[...boosts,{text:"",used:false}]);
+  const addBoost=()=>upd("boosts",[...boosts,{text:""}]);
   const remBoost=i=>upd("boosts",boosts.filter((_,j)=>j!==i));
   const updBoostText=(i,v)=>{const b=[...boosts];b[i]={...b[i],text:v};upd("boosts",b);};
-  const togBoost=i=>{const b=[...boosts];b[i]={...b[i],used:!b[i].used};upd("boosts",b);};
 
   return e("div",{style:{...card,borderTop:"3px solid "+C.accent,marginBottom:10}},
     e("div",{style:{display:"flex",gap:10,alignItems:"center"}},
@@ -396,7 +391,7 @@ function PCCard({pc,onChange,onRemove,onRoll}){
           e("div",{style:{marginTop:10}},
             e("div",{style:secHead()},"Extras"),
             e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta})),
-          e(BoostList,{boosts,onAdd:addBoost,onRemove:remBoost,onToggle:togBoost,onTextChange:updBoostText})
+          e(BoostList,{boosts,onAdd:addBoost,onRemove:remBoost,onTextChange:updBoostText})
         )
       )
     )
@@ -484,10 +479,9 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
         const npcStunts=toArr(npc.stunts||["",""]);
         const npcBoosts=toArr(npc.boosts||[]);
         const updStunt=(i,v)=>{const st=[...npcStunts];st[i]=v;upd({...npc,stunts:st});};
-        const addNpcBoost=()=>upd({...npc,boosts:[...npcBoosts,{text:"",used:false}]});
+        const addNpcBoost=()=>upd({...npc,boosts:[...npcBoosts,{text:""}]});
         const remNpcBoost=i=>upd({...npc,boosts:npcBoosts.filter((_,j)=>j!==i)});
         const updNpcBoostText=(i,v)=>{const b=[...npcBoosts];b[i]={...b[i],text:v};upd({...npc,boosts:b});};
-        const togNpcBoost=i=>{const b=[...npcBoosts];b[i]={...b[i],used:!b[i].used};upd({...npc,boosts:b});};
         return e("div",{key:npc.id,style:{...card,borderTop:"3px solid "+C.yellow}},
           e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},
             e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
@@ -505,7 +499,7 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
               e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))
           ),
           e(StressTrack,{boxes:toArr(npc.stress),label:"Stress",onChange:v=>upd({...npc,stress:v})}),
-          e(BoostList,{boosts:npcBoosts,onAdd:addNpcBoost,onRemove:remNpcBoost,onToggle:togNpcBoost,onTextChange:updNpcBoostText}),
+          e(BoostList,{boosts:npcBoosts,onAdd:addNpcBoost,onRemove:remNpcBoost,onTextChange:updNpcBoostText}),
           e("div",{style:{marginTop:8}},e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
         );
       })
