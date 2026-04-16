@@ -71,46 +71,44 @@ const newNPC=id=>({id,name:"NPC",highConcept:"",trouble:"",npcSkills:[{name:"",b
 const defaultState=()=>({pcs:[newPC("pc1")],npcs:[],scene:{name:"",aspects:[],zones:[],hook:"",setting:"",toneTags:""},gmFate:0});
 
 // ── Firebase session hook ─────────────────────────────────────────────────────
-function useFirebaseSession(sessionCode, initialData) {
-  const [gameState, setGameState] = useState(initialData||null);
-  const [syncStatus, setSyncStatus] = useState(initialData?"live":"connecting");
-  const focusedFields = useRef(new Set());
-  const writeTimer = useRef(null);
-  const isLocalWrite = useRef(false);
+function useFirebaseSession(sessionCode,initialData){
+  const [gameState,setGameState]=useState(initialData||null);
+  const [syncStatus,setSyncStatus]=useState(initialData?"live":"connecting");
+  const writeTimer=useRef(null);
+  const isLocalWrite=useRef(false);
 
   useEffect(()=>{
-    if(!sessionCode) return;
+    if(!sessionCode)return;
     const ref=db.ref("sessions/"+sessionCode);
-    ref.on("value", snap=>{
-      if(isLocalWrite.current) return;
+    ref.on("value",snap=>{
+      if(isLocalWrite.current)return;
       const val=snap.val();
-      if(val){ setGameState(val); setSyncStatus("live"); }
-    }, ()=>setSyncStatus("error"));
-    return ()=>ref.off("value");
+      if(val){setGameState(val);setSyncStatus("live");}
+    },()=>setSyncStatus("error"));
+    return()=>ref.off("value");
   },[sessionCode]);
 
   const updateState=useCallback(updater=>{
     setGameState(prev=>{
-      if(!prev) return prev;
+      if(!prev)return prev;
       const next=typeof updater==="function"?updater(prev):updater;
       isLocalWrite.current=true;
       setSyncStatus("syncing");
-      if(writeTimer.current) clearTimeout(writeTimer.current);
-      // Longer debounce (1s) to reduce collision chance during active typing
+      if(writeTimer.current)clearTimeout(writeTimer.current);
       writeTimer.current=setTimeout(function(){
         db.ref("sessions/"+sessionCode).set(next).then(function(){
           setSyncStatus("live");
-        }).catch(function(){ setSyncStatus("error"); });
+        }).catch(function(){setSyncStatus("error");});
         isLocalWrite.current=false;
       },1000);
       return next;
     });
   },[sessionCode]);
 
-  return {gameState,updateState,syncStatus};
+  return{gameState,updateState,syncStatus};
 }
 
-// ── Style helpers ─────────────────────────────────────────────────────────────
+// ── Styles ────────────────────────────────────────────────────────────────────
 const card={background:C.card,border:"1px solid "+C.border,borderRadius:8,padding:14,marginBottom:12,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"};
 const lbl={fontSize:10,fontWeight:700,color:C.muted,textTransform:"uppercase",letterSpacing:.6,marginBottom:2};
 const inp={width:"100%",border:"1px solid "+C.border,borderRadius:4,padding:"5px 8px",fontSize:13,outline:"none",background:"#fafbfc",boxSizing:"border-box"};
@@ -119,7 +117,6 @@ const sel={border:"1px solid "+C.border,borderRadius:4,padding:"4px 6px",fontSiz
 const secHead=col=>({background:col||C.sectionBg,color:"#fff",padding:"3px 9px",fontSize:10,fontWeight:800,letterSpacing:1.2,textTransform:"uppercase",borderRadius:3,marginBottom:8,display:"inline-block"});
 const btnStyle=col=>({background:col||C.accent,color:col===C.red?"#fff":C.header,border:"none",borderRadius:4,padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700});
 const ghost={background:"none",border:"1px solid "+C.border,borderRadius:4,padding:"5px 10px",cursor:"pointer",fontSize:12,color:C.muted};
-
 const e=React.createElement;
 
 // ── Shared UI ─────────────────────────────────────────────────────────────────
@@ -138,14 +135,17 @@ function StressTrack({boxes,onChange,label}){
   return e("div",{style:{marginBottom:8}},
     e("div",{style:lbl},label),
     e("div",{style:{display:"flex",gap:6,marginTop:4,flexWrap:"wrap"}},
-      boxes.map((c,i)=>e("div",{key:i,style:{width:32,height:32,border:"2px solid "+(c?C.red:C.border),borderRadius:4,cursor:"pointer",background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:14,flexShrink:0},
+      boxes.map((c,i)=>e("div",{key:i,
+        style:{width:32,height:32,border:"2px solid "+(c?C.red:C.border),borderRadius:4,cursor:"pointer",
+          background:c?C.red:"#fff",display:"flex",alignItems:"center",justifyContent:"center",
+          color:"#fff",fontWeight:700,fontSize:14,flexShrink:0},
         onClick:()=>{const n=[...boxes];n[i]=!n[i];onChange(n);}},c?"✕":""))
     )
   );
 }
 
 function LastRollBadge({roll}){
-  if(!roll) return e("div",{style:{textAlign:"center"}},e("div",{style:lbl},"Last Roll"),e("div",{style:{fontSize:12,color:C.muted,marginTop:6,fontStyle:"italic"}},"—"));
+  if(!roll)return e("div",{style:{textAlign:"center"}},e("div",{style:lbl},"Last Roll"),e("div",{style:{fontSize:12,color:C.muted,marginTop:6,fontStyle:"italic"}},"—"));
   const col=roll.total>=4?C.accent:roll.total<0?C.red:C.text;
   return e("div",{style:{textAlign:"center"}},
     e("div",{style:lbl},"Last Roll"),
@@ -160,7 +160,12 @@ function LastRollBadge({roll}){
 function Die({face,index,rolling}){
   const col=face==="+"?C.accent:face==="-"?C.red:"#4a5568";
   const sym=face==="+"?"+":face==="-"?"−":"○";
-  return e("div",{className:rolling?"dr"+index:"",style:{width:52,height:52,borderRadius:10,flexShrink:0,background:"linear-gradient(145deg,"+col+"ee,"+col+"99)",border:"2px solid "+col,boxShadow:"3px 3px 0 "+col+"55,5px 5px 0 "+col+"22,inset 0 1px 2px rgba(255,255,255,0.4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:900,color:"#fff",userSelect:"none",opacity:rolling?0:1,transition:rolling?"none":"all 0.2s ease"}},sym);
+  return e("div",{className:rolling?"dr"+index:"",
+    style:{width:52,height:52,borderRadius:10,flexShrink:0,
+      background:"linear-gradient(145deg,"+col+"ee,"+col+"99)",border:"2px solid "+col,
+      boxShadow:"3px 3px 0 "+col+"55,5px 5px 0 "+col+"22,inset 0 1px 2px rgba(255,255,255,0.4)",
+      display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:900,
+      color:"#fff",userSelect:"none",opacity:rolling?0:1,transition:rolling?"none":"all 0.2s ease"}},sym);
 }
 
 function DiceRow({faces,animKey,rolling}){
@@ -171,7 +176,7 @@ function DiceRow({faces,animKey,rolling}){
 function useDiceRoller(){
   const [st,setSt]=useState({faces:["","","",""],rolling:false,result:null,animKey:0,history:[]});
   const doRoll=function(bonus,tierLabel,pcName,onDone){
-    bonus=bonus||0; tierLabel=tierLabel||"Plain Roll"; pcName=pcName||"";
+    bonus=bonus||0;tierLabel=tierLabel||"Plain Roll";pcName=pcName||"";
     setSt(s=>({...s,rolling:true,result:null,animKey:s.animKey+1}));
     setTimeout(function(){
       const d=roll4dF();
@@ -179,20 +184,24 @@ function useDiceRoller(){
       const total=dsum+bonus;
       const r={dice:d,diceSum:dsum,bonus,total,tierLabel,pcName,ts:new Date().toLocaleTimeString()};
       setSt(s=>({faces:d,rolling:false,result:r,animKey:s.animKey,history:[r,...s.history].slice(0,12)}));
-      if(onDone) onDone(r);
+      if(onDone)onDone(r);
     },1100);
   };
-  return {...st,doRoll};
+  return{...st,doRoll};
 }
 
 function SkillPyramid({skills,onChange,onRoll,pcName}){
   const used=skills.flat().filter(Boolean);
   return e("div",null,PYRAMID.map((row,ri)=>
     e("div",{key:ri,style:{display:"flex",alignItems:"center",gap:6,marginBottom:5}},
-      e("button",{onClick:()=>onRoll(row.bonus,row.label,pcName),style:{width:120,fontSize:11,fontWeight:700,color:C.header,background:C.accent,border:"none",borderRadius:4,padding:"4px 6px",cursor:"pointer",flexShrink:0,textAlign:"left"}},row.label+" 🎲"),
+      e("button",{onClick:()=>onRoll(row.bonus,row.label,pcName),
+        style:{width:120,fontSize:11,fontWeight:700,color:C.header,background:C.accent,
+          border:"none",borderRadius:4,padding:"4px 6px",cursor:"pointer",flexShrink:0,textAlign:"left"}},
+        row.label+" 🎲"),
       skills[ri].map((val,si)=>{
         const opts=SKILLS.filter(sk=>!used.includes(sk)||sk===val);
-        return e("select",{key:si,value:val,style:sel,onChange:ev=>{const ns=skills.map(r=>[...r]);ns[ri][si]=ev.target.value;onChange(ns);}},
+        return e("select",{key:si,value:val,style:sel,
+          onChange:ev=>{const ns=skills.map(r=>[...r]);ns[ri][si]=ev.target.value;onChange(ns);}},
           e("option",{value:""},"—"),opts.map(sk=>e("option",{key:sk,value:sk},sk)));
       })
     )
@@ -208,14 +217,36 @@ function NPCSkillRow({skills,onChange,onRoll,npcName}){
       const isSecret=cur.name==="???";
       const available=NPC_SKILLS.filter(sk=>!usedNames.includes(sk)||sk===cur.name);
       return e("div",{key:i,style:{display:"flex",alignItems:"center",gap:5,marginBottom:4}},
-        e("button",{onClick:()=>{if(cur.name)onRoll(lvl.bonus,isSecret?"???":cur.name+" ("+lvl.label+")",npcName);},disabled:!cur.name,
-          style:{width:28,flexShrink:0,background:cur.name?(isSecret?"#9b2226":C.accent):"#ccc",color:C.header,border:"none",borderRadius:4,padding:"3px 0",cursor:cur.name?"pointer":"default",fontSize:13,fontWeight:700,textAlign:"center"}},"🎲"),
+        e("button",{onClick:()=>{if(cur.name)onRoll(lvl.bonus,isSecret?"???":cur.name+" ("+lvl.label+")",npcName);},
+          disabled:!cur.name,
+          style:{width:28,flexShrink:0,background:cur.name?(isSecret?"#9b2226":C.accent):"#ccc",
+            color:C.header,border:"none",borderRadius:4,padding:"3px 0",
+            cursor:cur.name?"pointer":"default",fontSize:13,fontWeight:700,textAlign:"center"}},"🎲"),
         e("span",{style:{width:28,fontSize:12,fontWeight:800,color:isSecret?"#9b2226":C.accent,flexShrink:0,textAlign:"right"}},lvl.label),
         e("select",{value:cur.name,style:{...sel,color:isSecret?"#9b2226":undefined,fontWeight:isSecret?700:400},
           onChange:ev=>{const ns=[...toArr(skills)];ns[i]={...ns[i],name:ev.target.value,bonus:lvl.bonus};onChange(ns);}},
-          e("option",{value:""},"—"),available.map(sk=>e("option",{key:sk,value:sk,style:sk==="???"?{fontWeight:700,color:"#9b2226"}:{}},sk)))
+          e("option",{value:""},"—"),
+          available.map(sk=>e("option",{key:sk,value:sk,style:sk==="???"?{fontWeight:700,color:"#9b2226"}:{}},sk)))
       );
     })
+  );
+}
+
+function BoostList({boosts,onAdd,onRemove,onToggle,onTextChange}){
+  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,
+    cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",
+    justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
+  return e("div",{style:{marginTop:8}},
+    e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
+      e("div",{style:secHead()},"Boost(s)"),
+      e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:onAdd},"+ Boost")
+    ),
+    boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
+    boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
+      e("div",{style:ibox(b.used),onClick:()=>onToggle(i)},b.used?"✓":""),
+      e("input",{value:b.text,onChange:ev=>onTextChange(i,ev.target.value),placeholder:"Boost…",style:inp}),
+      e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>onRemove(i)},"✕")
+    ))
   );
 }
 
@@ -267,6 +298,7 @@ function Lobby({onJoin}){
   );
 }
 
+// ── SyncBadge ─────────────────────────────────────────────────────────────────
 function SyncBadge({status,code}){
   const cfg={connecting:{bg:"#f0c040",t:"#7a5c00",l:"Connecting…"},syncing:{bg:"#f0c040",t:"#7a5c00",l:"Syncing…"},live:{bg:"#2a9d5c",t:"#fff",l:"● Live"},error:{bg:C.red,t:"#fff",l:"Sync Error"}}[status]||{bg:"#2a9d5c",t:"#fff",l:"● Live"};
   return e("div",{style:{display:"flex",alignItems:"center",gap:10,marginLeft:"auto"}},
@@ -275,9 +307,24 @@ function SyncBadge({status,code}){
   );
 }
 
+// ── DeleteButton ──────────────────────────────────────────────────────────────
+function DeleteButton({onDelete}){
+  const [confirm,setConfirm]=useState(false);
+  if(!confirm)return e("button",{
+    style:{background:"none",border:"1px solid rgba(255,255,255,0.2)",borderRadius:6,
+      padding:"4px 10px",fontSize:11,color:"#8fa8c0",cursor:"pointer",marginLeft:8,whiteSpace:"nowrap"},
+    onClick:()=>setConfirm(true)},"🗑 Delete Session");
+  return e("div",{style:{display:"flex",alignItems:"center",gap:6,marginLeft:8}},
+    e("span",{style:{fontSize:11,color:C.red,fontWeight:700}},"Are you sure?"),
+    e("button",{style:{...btnStyle(C.red),fontSize:11,padding:"4px 8px"},onClick:onDelete},"Yes, delete"),
+    e("button",{style:{background:"none",border:"1px solid rgba(255,255,255,0.2)",borderRadius:4,
+      padding:"4px 8px",fontSize:11,color:"#8fa8c0",cursor:"pointer"},
+      onClick:()=>setConfirm(false)},"Cancel")
+  );
+}
+
 // ── PC Card ───────────────────────────────────────────────────────────────────
 function PCCard({pc,onChange,onRemove,onRoll}){
-  // collapsed is local-only state — not synced to Firebase
   const [collapsed,setCollapsed]=useState(false);
   const upd=(f,v)=>onChange({...pc,[f]:v});
   const updA=(i,v)=>{const a=toArr(pc.aspects);a[i]=v;upd("aspects",a);};
@@ -289,21 +336,25 @@ function PCCard({pc,onChange,onRemove,onRoll}){
   const skills=toArr(pc.skills).map(r=>toArr(r));
   const boosts=toArr(pc.boosts);
   const handleRoll=(bonus,tierLabel,pcName)=>onRoll(bonus,tierLabel,pcName,r=>onChange({...pc,lastRoll:r}));
-
   const addBoost=()=>upd("boosts",[...boosts,{text:"",used:false}]);
   const remBoost=i=>upd("boosts",boosts.filter((_,j)=>j!==i));
   const updBoostText=(i,v)=>{const b=[...boosts];b[i]={...b[i],text:v};upd("boosts",b);};
   const togBoost=i=>{const b=[...boosts];b[i]={...b[i],used:!b[i].used};upd("boosts",b);};
-  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
 
   return e("div",{style:{...card,borderTop:"3px solid "+C.accent,marginBottom:10}},
     e("div",{style:{display:"flex",gap:10,alignItems:"center"}},
-      e("button",{onClick:()=>setCollapsed(!collapsed),style:{background:C.header,border:"none",borderRadius:4,color:"#fff",width:26,height:26,cursor:"pointer",flexShrink:0,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}},collapsed?"▶":"▼"),
-      e("input",{value:pc.name,onChange:ev=>upd("name",ev.target.value),placeholder:"Character Name",style:{...inp,fontSize:15,fontWeight:700,flex:1}}),
+      e("button",{onClick:()=>setCollapsed(!collapsed),
+        style:{background:C.header,border:"none",borderRadius:4,color:"#fff",width:26,height:26,
+          cursor:"pointer",flexShrink:0,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}},
+        collapsed?"▶":"▼"),
+      e("input",{value:pc.name,onChange:ev=>upd("name",ev.target.value),placeholder:"Character Name",
+        style:{...inp,fontSize:15,fontWeight:700,flex:1}}),
       collapsed&&e("div",{style:{display:"flex",gap:6,alignItems:"center",flexShrink:0}},
         pc.highConcept&&e("span",{style:{fontSize:12,color:C.muted,fontWeight:600}},pc.highConcept),
         e("span",{style:{background:C.accentLight,color:C.accentDark,borderRadius:4,padding:"2px 8px",fontWeight:800,fontSize:13}},"◆ "+pc.fate),
-        pc.lastRoll&&e("span",{style:{background:"#f0f4f8",borderRadius:4,padding:"2px 8px",fontSize:12,fontWeight:700,color:pc.lastRoll.total>=4?C.accent:pc.lastRoll.total<0?C.red:C.text}},(pc.lastRoll.total>=0?"+":"")+pc.lastRoll.total+" "+ladderName(pc.lastRoll.total))
+        pc.lastRoll&&e("span",{style:{background:"#f0f4f8",borderRadius:4,padding:"2px 8px",fontSize:12,fontWeight:700,
+          color:pc.lastRoll.total>=4?C.accent:pc.lastRoll.total<0?C.red:C.text}},
+          (pc.lastRoll.total>=0?"+":"")+pc.lastRoll.total+" "+ladderName(pc.lastRoll.total))
       ),
       !collapsed&&e("div",{style:{display:"flex",gap:16,alignItems:"flex-start",flexShrink:0}},
         e(FateCounter,{value:pc.fate,onChange:v=>upd("fate",v),label:"Fate Points"}),
@@ -315,15 +366,23 @@ function PCCard({pc,onChange,onRemove,onRoll}){
       e("div",{className:"auto-grid"},
         e("div",null,
           e("div",{style:secHead()},"Aspects"),
-          [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
-          aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},e("div",{style:lbl},"Aspect "+(i+1)),e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
+          [["highConcept","High Concept"],["trouble","Trouble"]].map(([f,l])=>
+            e("div",{key:f,style:{marginBottom:6}},e("div",{style:lbl},l),
+              e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:l,style:inp}))),
+          aspects.map((a,i)=>e("div",{key:i,style:{marginBottom:6}},
+            e("div",{style:lbl},"Aspect "+(i+1)),
+            e("input",{value:a,onChange:ev=>updA(i,ev.target.value),placeholder:"Aspect "+(i+1),style:inp}))),
           e("div",{style:{marginTop:10}},
             e("div",{style:secHead()},"Stress & Consequences"),
             e("div",{className:"stress-row",style:{display:"flex",gap:16,flexWrap:"wrap"}},
               e("div",{style:{flex:1,minWidth:160}},e(StressTrack,{boxes:physStress,label:"Physical (Physique)",onChange:v=>upd("physStress",v)})),
               e("div",{style:{flex:1,minWidth:160}},e(StressTrack,{boxes:mentStress,label:"Mental (Will)",onChange:v=>upd("mentStress",v)}))
             ),
-            e("div",{style:{marginTop:8}},[["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>e("div",{key:f,style:{marginBottom:5}},e("div",{style:lbl},l),e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp}))))
+            e("div",{style:{marginTop:8}},
+              [["mildCon","Mild (−2)"],["moderateCon","Moderate (−4)"],["severeCon","Severe (−6)"]].map(([f,l])=>
+                e("div",{key:f,style:{marginBottom:5}},
+                  e("div",{style:lbl},l),
+                  e("input",{value:pc[f],onChange:ev=>upd(f,ev.target.value),placeholder:"Consequence…",style:inp}))))
           )
         ),
         e("div",null,
@@ -333,22 +392,11 @@ function PCCard({pc,onChange,onRemove,onRoll}){
             e("div",{style:secHead()},"Stunts"),
             stunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},
               e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),
-              e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})
-            ))
-          ),
-          e("div",{style:{marginTop:10}},e("div",{style:secHead()},"Extras"),e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta})),
+              e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))),
           e("div",{style:{marginTop:10}},
-            e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
-              e("div",{style:secHead()},"Boost(s)"),
-              e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:addBoost},"+ Boost")
-            ),
-            boosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
-            boosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
-              e("div",{style:{...ibox(b.used),flexShrink:0},onClick:()=>togBoost(i)},b.used?"✓":""),
-              e("input",{value:b.text,onChange:ev=>updBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
-              e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remBoost(i)},"✕")
-            ))
-          )
+            e("div",{style:secHead()},"Extras"),
+            e("textarea",{value:pc.extras,onChange:ev=>upd("extras",ev.target.value),placeholder:"List extras here…",rows:3,style:ta})),
+          e(BoostList,{boosts,onAdd:addBoost,onRemove:remBoost,onToggle:togBoost,onTextChange:updBoostText})
         )
       )
     )
@@ -377,23 +425,26 @@ function SceneTab({scene,update}){
   const remA=i=>upd({aspects:toArr(scene.aspects).filter((_,j)=>j!==i)});
   const updAT=(i,v)=>{const a=[...toArr(scene.aspects)];a[i]={...a[i],text:v};upd({aspects:a});};
   const togAB=(i,bi)=>{const a=[...toArr(scene.aspects)];const b=[...toArr(a[i].boxes)];b[bi]=!b[bi];a[i]={...a[i],boxes:b};upd({aspects:a});};
-  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
+  const ibox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",
+    background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",
+    color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
   return e("div",{className:"auto-grid-wide"},
     e("div",null,
       e("div",{style:card},
         e("div",{style:secHead()},"Scene"),
         e("div",{style:lbl},"Scene Name"),
         e("input",{value:scene.name,onChange:ev=>upd({name:ev.target.value}),placeholder:"Scene name…",style:{...inp,marginBottom:12}}),
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},e("div",{style:secHead()},"Scene Aspects"),e("button",{style:btnStyle(),onClick:addA},"+")),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
+          e("div",{style:secHead()},"Scene Aspects"),e("button",{style:btnStyle(),onClick:addA},"+")),
         scene.aspects.length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No scene aspects."),
         scene.aspects.map((a,i)=>e("div",{key:i,style:{display:"flex",gap:8,alignItems:"center",marginBottom:5}},
           e("input",{value:a.text,onChange:ev=>updAT(i,ev.target.value),placeholder:"Scene aspect…",style:inp}),
           e("div",{style:{display:"flex",gap:3,flexShrink:0}},toArr(a.boxes).map((c,bi)=>e("div",{key:bi,style:ibox(c),onClick:()=>togAB(i,bi)},c?"✓":""))),
-          e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remA(i)},"✕")
-        ))
+          e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remA(i)},"✕")))
       ),
       e("div",{style:card},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},e("div",{style:secHead()},"Zones"),e("button",{style:btnStyle(),onClick:()=>upd({zones:[...toArr(scene.zones),""]})},"+")),
+        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
+          e("div",{style:secHead()},"Zones"),e("button",{style:btnStyle(),onClick:()=>upd({zones:[...toArr(scene.zones),""]})},"+")),
         toArr(scene.zones).length===0&&e("div",{style:{color:C.muted,fontSize:12}},"No zones."),
         toArr(scene.zones).map((z,i)=>e("div",{key:i,style:{display:"flex",gap:8,marginBottom:4}},
           e("input",{value:z,onChange:ev=>{const zz=[...toArr(scene.zones)];zz[i]=ev.target.value;upd({zones:zz});},placeholder:"Zone "+(i+1)+"…",style:inp}),
@@ -403,9 +454,12 @@ function SceneTab({scene,update}){
     e("div",null,
       e("div",{style:{...card,borderTop:"3px solid "+C.purple}},
         e("div",{style:secHead(C.purple)},"World Building"),
-        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"The Hook"),e("textarea",{value:scene.hook||"",onChange:ev=>upd({hook:ev.target.value}),placeholder:"One sentence that kicks the session off…",rows:2,style:ta})),
-        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"Setting"),e("textarea",{value:scene.setting||"",onChange:ev=>upd({setting:ev.target.value}),placeholder:"Describe the world or premise…",rows:3,style:ta})),
-        e("div",null,e("div",{style:lbl},"Tone / Genre Tags"),e("input",{value:scene.toneTags||"",onChange:ev=>upd({toneTags:ev.target.value}),placeholder:"e.g. tense, pulpy, mysterious…",style:inp}))
+        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"The Hook"),
+          e("textarea",{value:scene.hook||"",onChange:ev=>upd({hook:ev.target.value}),placeholder:"One sentence that kicks the session off…",rows:2,style:ta})),
+        e("div",{style:{marginBottom:12}},e("div",{style:lbl},"Setting"),
+          e("textarea",{value:scene.setting||"",onChange:ev=>upd({setting:ev.target.value}),placeholder:"Describe the world or premise…",rows:3,style:ta})),
+        e("div",null,e("div",{style:lbl},"Tone / Genre Tags"),
+          e("input",{value:scene.toneTags||"",onChange:ev=>upd({toneTags:ev.target.value}),placeholder:"e.g. tense, pulpy, mysterious…",style:inp}))
       )
     )
   );
@@ -428,41 +482,30 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
     e("div",{className:"npc-grid"},
       npcs.map(npc=>{
         const npcStunts=toArr(npc.stunts||["",""]);
-        const updStunt=(i,v)=>{const st=[...npcStunts];st[i]=v;upd({...npc,stunts:st});};
         const npcBoosts=toArr(npc.boosts||[]);
+        const updStunt=(i,v)=>{const st=[...npcStunts];st[i]=v;upd({...npc,stunts:st});};
         const addNpcBoost=()=>upd({...npc,boosts:[...npcBoosts,{text:"",used:false}]});
         const remNpcBoost=i=>upd({...npc,boosts:npcBoosts.filter((_,j)=>j!==i)});
         const updNpcBoostText=(i,v)=>{const b=[...npcBoosts];b[i]={...b[i],text:v};upd({...npc,boosts:b});};
         const togNpcBoost=i=>{const b=[...npcBoosts];b[i]={...b[i],used:!b[i].used};upd({...npc,boosts:b});};
-        const npcIbox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
         return e("div",{key:npc.id,style:{...card,borderTop:"3px solid "+C.yellow}},
           e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},
             e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
             e("button",{style:{...ghost,color:C.red,marginLeft:4},onClick:()=>rem(npc.id)},"✕")
           ),
-          e("div",{style:{marginBottom:6}},e("div",{style:lbl},"High Concept"),e("input",{value:npc.highConcept,onChange:ev=>upd({...npc,highConcept:ev.target.value}),placeholder:"High concept…",style:inp})),
-          e("div",{style:{marginBottom:10}},e("div",{style:lbl},"Trouble"),e("input",{value:npc.trouble,onChange:ev=>upd({...npc,trouble:ev.target.value}),placeholder:"Trouble…",style:inp})),
+          e("div",{style:{marginBottom:6}},e("div",{style:lbl},"High Concept"),
+            e("input",{value:npc.highConcept,onChange:ev=>upd({...npc,highConcept:ev.target.value}),placeholder:"High concept…",style:inp})),
+          e("div",{style:{marginBottom:10}},e("div",{style:lbl},"Trouble"),
+            e("input",{value:npc.trouble,onChange:ev=>upd({...npc,trouble:ev.target.value}),placeholder:"Trouble…",style:inp})),
           e(NPCSkillRow,{skills:toArr(npc.npcSkills),onChange:v=>upd({...npc,npcSkills:v}),onRoll,npcName:npc.name||"NPC"}),
           e("div",{style:{marginBottom:10}},
             e("div",{style:secHead()},"Stunts"),
             npcStunts.map((st,i)=>e("div",{key:i,style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},
               e("span",{style:{fontSize:12,fontWeight:800,color:C.muted,flexShrink:0,width:16}},(i+1)+"."),
-              e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})
-            ))
+              e("input",{value:st,onChange:ev=>updStunt(i,ev.target.value),placeholder:"Stunt "+(i+1)+"…",style:inp})))
           ),
           e(StressTrack,{boxes:toArr(npc.stress),label:"Stress",onChange:v=>upd({...npc,stress:v})}),
-          e("div",{style:{marginTop:8}},
-            e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
-              e("div",{style:secHead()},"Boost(s)"),
-              e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:addNpcBoost},"+ Boost")
-            ),
-            npcBoosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
-            npcBoosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
-              e("div",{style:{...npcIbox(b.used),flexShrink:0},onClick:()=>togNpcBoost(i)},b.used?"✓":""),
-              e("input",{value:b.text,onChange:ev=>updNpcBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
-              e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remNpcBoost(i)},"✕")
-            ))
-          ),
+          e(BoostList,{boosts:npcBoosts,onAdd:addNpcBoost,onRemove:remNpcBoost,onToggle:togNpcBoost,onTextChange:updNpcBoostText}),
           e("div",{style:{marginTop:8}},e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
         );
       })
@@ -472,7 +515,7 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
 
 // ── Reference Tab ─────────────────────────────────────────────────────────────
 function RollResult({result}){
-  if(!result) return null;
+  if(!result)return null;
   const col=result.total>=4?C.accent:result.total<0?C.red:C.text;
   return e("div",{style:{marginTop:12,textAlign:"center"}},
     result.bonus!==0&&e("div",{style:{fontSize:12,color:C.muted}},"Dice "+(result.diceSum>=0?"+":"")+result.diceSum+" + Skill "+(result.bonus>=0?"+":"")+result.bonus),
@@ -482,7 +525,7 @@ function RollResult({result}){
 }
 
 function ReferenceTab({pcs,gmFate,update,roller}){
-  const {faces,rolling,result,animKey,history,doRoll}=roller;
+  const{faces,rolling,result,animKey,history,doRoll}=roller;
   const refs=[
     {t:"Four Outcomes",items:[["Fail","Fail or succeed at major cost"],["Tie (0 shifts)","Succeed at minor cost"],["Succeed (1–2 shifts)","Succeed with no cost"],["Succeed with Style (3+)","Succeed with additional benefit"]]},
     {t:"Aspect Types",items:[["Game aspects","Permanent, made during game creation"],["Character aspects","Permanent, during character creation"],["Situation aspects","Last for a scene or until overcome"],["Boosts","Last until invoked once"],["Consequences","Last until recovered"]]},
@@ -496,8 +539,12 @@ function ReferenceTab({pcs,gmFate,update,roller}){
         e("div",{style:secHead()},"Fate Economy"),
         e("div",{style:{marginBottom:14}},e(FateCounter,{value:gmFate,onChange:v=>update(s=>({...s,gmFate:v})),label:"GM Fate Pool"})),
         e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:13}},
-          e("thead",null,e("tr",{style:{borderBottom:"2px solid "+C.border}},e("th",{style:{textAlign:"left",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"PC"),e("th",{style:{textAlign:"center",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"Fate"))),
-          e("tbody",null,pcs.map(pc=>e("tr",{key:pc.id,style:{borderBottom:"1px solid "+C.border}},e("td",{style:{padding:"6px 8px"}},pc.name||"Unnamed"),e("td",{style:{textAlign:"center",padding:"6px 8px",fontWeight:800,color:C.accent}},pc.fate))))
+          e("thead",null,e("tr",{style:{borderBottom:"2px solid "+C.border}},
+            e("th",{style:{textAlign:"left",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"PC"),
+            e("th",{style:{textAlign:"center",padding:"4px 8px",color:C.muted,fontWeight:700,fontSize:11}},"Fate"))),
+          e("tbody",null,pcs.map(pc=>e("tr",{key:pc.id,style:{borderBottom:"1px solid "+C.border}},
+            e("td",{style:{padding:"6px 8px"}},pc.name||"Unnamed"),
+            e("td",{style:{textAlign:"center",padding:"6px 8px",fontWeight:800,color:C.accent}},pc.fate))))
         )
       ),
       e("div",{style:card},
@@ -526,7 +573,8 @@ function ReferenceTab({pcs,gmFate,update,roller}){
     ),
     e("div",null,refs.map(sec=>e("div",{key:sec.t,style:card},
       e("div",{style:secHead()},sec.t),
-      sec.items.map(([k,v])=>e("div",{key:k,style:{padding:"4px 0",borderBottom:"1px solid "+C.border,fontSize:13}},e("strong",null,k),v!=="—"?": "+v:""))
+      sec.items.map(([k,v])=>e("div",{key:k,style:{padding:"4px 0",borderBottom:"1px solid "+C.border,fontSize:13}},
+        e("strong",null,k),v!=="—"?": "+v:""))
     )))
   );
 }
@@ -538,20 +586,18 @@ function App(){
   const [tab,setTab]=useState("Party");
   const [modalOpen,setModalOpen]=useState(false);
   const roller=useDiceRoller();
-  const {gameState,updateState,syncStatus}=useFirebaseSession(sessionCode,initialData);
+  const{gameState,updateState,syncStatus}=useFirebaseSession(sessionCode,initialData);
 
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const deleteSession = function() {
-    db.ref("sessions/"+sessionCode).remove().then(function(){
-      setSessionCode(null);
-      setInitialData(null);
-    }).catch(function(err){ alert("Error deleting session: "+err.message); });
-  };
+  const handleRoll=(bonus,tierLabel,pcName,onDone)=>{roller.doRoll(bonus,tierLabel,pcName,onDone);setModalOpen(true);};
   const handleFlatRoll=()=>{roller.doRoll(0,"Plain Roll","");setModalOpen(true);};
+  const deleteSession=function(){
+    db.ref("sessions/"+sessionCode).remove().then(function(){
+      setSessionCode(null);setInitialData(null);
+    }).catch(function(err){alert("Error: "+err.message);});
+  };
 
-  if(!sessionCode) return e(Lobby,{onJoin:(code,data)=>{setInitialData(data);setSessionCode(code);}});
-  if(!gameState) return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
+  if(!sessionCode)return e(Lobby,{onJoin:(code,data)=>{setInitialData(data);setSessionCode(code);}});
+  if(!gameState)return e("div",{style:{minHeight:"100vh",background:C.header,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",gap:16}},
     e("div",{style:{width:48,height:48,background:C.accent,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:24,color:C.header}},"F"),
     e("div",{style:{fontSize:16,color:"#8fa8c0"}},"Connecting to session…"),
     e("div",{style:{fontSize:12,color:"#4a6080"}},"Session: "+sessionCode)
@@ -567,13 +613,18 @@ function App(){
   return e("div",{style:{fontFamily:"'Segoe UI',system-ui,sans-serif",background:C.bg,minHeight:"100vh",color:C.text}},
     e("div",{className:"sticky-header",style:{background:C.header,color:"#fff",padding:"10px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:"3px solid "+C.accent}},
       e("div",{style:{width:32,height:32,background:C.accent,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:18,color:C.header,flexShrink:0}},"F"),
-      e("div",null,e("div",{style:{fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
+      e("div",null,
+        e("div",{style:{fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),
+        e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
       e(SyncBadge,{status:syncStatus,code:sessionCode}),
       e(DeleteButton,{onDelete:deleteSession})
     ),
     e("div",{className:"sticky-header tab-bar",style:{background:C.header,borderBottom:"1px solid #2a3f55",top:53}},
       e("div",{style:{display:"flex",padding:"0 16px"}},
-        TABS.map(t=>e("button",{key:t,style:{padding:"12px 16px",cursor:"pointer",fontWeight:600,fontSize:13,color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",borderBottom:tab===t?"2px solid "+C.accent:"2px solid transparent",whiteSpace:"nowrap"},onClick:()=>setTab(t)},t))
+        TABS.map(t=>e("button",{key:t,style:{padding:"12px 16px",cursor:"pointer",fontWeight:600,fontSize:13,
+          color:tab===t?C.accent:"#8fa8c0",background:"none",border:"none",
+          borderBottom:tab===t?"2px solid "+C.accent:"2px solid transparent",whiteSpace:"nowrap"},
+          onClick:()=>setTab(t)},t))
       )
     ),
     e("div",{style:{padding:16,maxWidth:1200,margin:"0 auto"}},
@@ -582,9 +633,12 @@ function App(){
       e("div",{style:{display:tab==="NPCs"?"block":"none"}},e(NPCTab,{npcs,update:updateState,onRoll:handleRoll,handleFlatRoll})),
       e("div",{style:{display:tab==="Reference"?"block":"none"}},e(ReferenceTab,{pcs,gmFate,update:updateState,roller}))
     ),
-    modalOpen&&e("div",{style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000},onClick:()=>{if(!roller.rolling)setModalOpen(false);}},
-      e("div",{style:{background:"#fff",borderRadius:14,padding:32,minWidth:340,boxShadow:"0 12px 48px rgba(0,0,0,0.35)",textAlign:"center",borderTop:"4px solid "+C.accent},onClick:ev=>ev.stopPropagation()},
-        roller.result&&e("div",{style:{fontSize:13,color:C.muted,marginBottom:12,fontWeight:600}},roller.result.pcName?(roller.result.pcName+" — "+roller.result.tierLabel):roller.result.tierLabel),
+    modalOpen&&e("div",{style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000},
+      onClick:()=>{if(!roller.rolling)setModalOpen(false);}},
+      e("div",{style:{background:"#fff",borderRadius:14,padding:32,minWidth:340,boxShadow:"0 12px 48px rgba(0,0,0,0.35)",textAlign:"center",borderTop:"4px solid "+C.accent},
+        onClick:ev=>ev.stopPropagation()},
+        roller.result&&e("div",{style:{fontSize:13,color:C.muted,marginBottom:12,fontWeight:600}},
+          roller.result.pcName?(roller.result.pcName+" — "+roller.result.tierLabel):roller.result.tierLabel),
         e(DiceRow,{faces:roller.rolling?["","","",""]:roller.faces,animKey:roller.animKey,rolling:roller.rolling}),
         !roller.rolling&&e(React.Fragment,null,
           e(RollResult,{result:roller.result}),
@@ -600,7 +654,7 @@ if(!window.__fateRoot){
 }
 window.__fateRoot.render(e(App));
 
-} catch(err) {
+}catch(err){
   document.getElementById("root").innerHTML='<div style="padding:40px;font-family:monospace;color:red;background:#fff;"><h2>Startup Error</h2><pre>'+err.stack+'</pre></div>';
 }
 </script>
