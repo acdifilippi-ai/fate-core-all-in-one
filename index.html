@@ -67,7 +67,7 @@ const C={accent:"#00b4cc",accentDark:"#0090a8",accentLight:"#e0f7fa",header:"#1b
 const toArr=v=>v?(Array.isArray(v)?v:Object.values(v)):[];
 
 const newPC=id=>({id,name:"New Character",highConcept:"",trouble:"",aspects:["","",""],skills:PYRAMID.map(r=>Array(r.count).fill("")),physStress:[false,false,true,true],mentStress:[false,false,true,true],mildCon:"",moderateCon:"",severeCon:"",stunts:["","",""],extras:"",boosts:[],fate:3,lastRoll:null});
-const newNPC=id=>({id,name:"NPC",highConcept:"",trouble:"",npcSkills:[{name:"",bonus:3},{name:"",bonus:2},{name:"",bonus:1}],stunts:["",""],stress:[false,false,false,false,false],fate:0});
+const newNPC=id=>({id,name:"NPC",highConcept:"",trouble:"",npcSkills:[{name:"",bonus:3},{name:"",bonus:2},{name:"",bonus:1}],stunts:["",""],stress:[false,false,false,false,false],boosts:[],fate:0});
 const defaultState=()=>({pcs:[newPC("pc1")],npcs:[],scene:{name:"",aspects:[],zones:[],hook:"",setting:"",toneTags:""},gmFate:0});
 
 // ── Firebase session hook ─────────────────────────────────────────────────────
@@ -429,6 +429,12 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
       npcs.map(npc=>{
         const npcStunts=toArr(npc.stunts||["",""]);
         const updStunt=(i,v)=>{const st=[...npcStunts];st[i]=v;upd({...npc,stunts:st});};
+        const npcBoosts=toArr(npc.boosts||[]);
+        const addNpcBoost=()=>upd({...npc,boosts:[...npcBoosts,{text:"",used:false}]});
+        const remNpcBoost=i=>upd({...npc,boosts:npcBoosts.filter((_,j)=>j!==i)});
+        const updNpcBoostText=(i,v)=>{const b=[...npcBoosts];b[i]={...b[i],text:v};upd({...npc,boosts:b});};
+        const togNpcBoost=i=>{const b=[...npcBoosts];b[i]={...b[i],used:!b[i].used};upd({...npc,boosts:b});};
+        const npcIbox=c=>({width:26,height:26,border:"2px solid "+(c?C.accent:C.border),borderRadius:3,cursor:"pointer",background:c?C.accent:"#fff",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:700,fontSize:12,flexShrink:0});
         return e("div",{key:npc.id,style:{...card,borderTop:"3px solid "+C.yellow}},
           e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},
             e("input",{value:npc.name,onChange:ev=>upd({...npc,name:ev.target.value}),placeholder:"NPC Name",style:{...inp,fontWeight:700}}),
@@ -445,6 +451,18 @@ function NPCTab({npcs,update,onRoll,handleFlatRoll}){
             ))
           ),
           e(StressTrack,{boxes:toArr(npc.stress),label:"Stress",onChange:v=>upd({...npc,stress:v})}),
+          e("div",{style:{marginTop:8}},
+            e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
+              e("div",{style:secHead()},"Boost(s)"),
+              e("button",{style:{...btnStyle(),fontSize:11,padding:"4px 10px"},onClick:addNpcBoost},"+ Boost")
+            ),
+            npcBoosts.length===0&&e("div",{style:{color:C.muted,fontSize:12,marginBottom:4}},"No boosts."),
+            npcBoosts.map((b,i)=>e("div",{key:i,style:{display:"flex",gap:6,alignItems:"center",marginBottom:5}},
+              e("div",{style:{...npcIbox(b.used),flexShrink:0},onClick:()=>togNpcBoost(i)},b.used?"✓":""),
+              e("input",{value:b.text,onChange:ev=>updNpcBoostText(i,ev.target.value),placeholder:"Boost…",style:inp}),
+              e("button",{style:{...ghost,color:C.red,padding:"3px 7px"},onClick:()=>remNpcBoost(i)},"✕")
+            ))
+          ),
           e("div",{style:{marginTop:8}},e(FateCounter,{value:npc.fate,onChange:v=>upd({...npc,fate:v}),label:"Fate Points"}))
         );
       })
@@ -522,7 +540,14 @@ function App(){
   const roller=useDiceRoller();
   const {gameState,updateState,syncStatus}=useFirebaseSession(sessionCode,initialData);
 
-  const handleRoll=(bonus,tierLabel,pcName,onDone)=>{roller.doRoll(bonus,tierLabel,pcName,onDone);setModalOpen(true);};
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const deleteSession = function() {
+    db.ref("sessions/"+sessionCode).remove().then(function(){
+      setSessionCode(null);
+      setInitialData(null);
+    }).catch(function(err){ alert("Error deleting session: "+err.message); });
+  };
   const handleFlatRoll=()=>{roller.doRoll(0,"Plain Roll","");setModalOpen(true);};
 
   if(!sessionCode) return e(Lobby,{onJoin:(code,data)=>{setInitialData(data);setSessionCode(code);}});
@@ -543,7 +568,8 @@ function App(){
     e("div",{className:"sticky-header",style:{background:C.header,color:"#fff",padding:"10px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:"3px solid "+C.accent}},
       e("div",{style:{width:32,height:32,background:C.accent,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:18,color:C.header,flexShrink:0}},"F"),
       e("div",null,e("div",{style:{fontSize:17,fontWeight:800,letterSpacing:1.5,textTransform:"uppercase"}},"Fate Core"),e("div",{style:{fontSize:11,color:"#8fa8c0",marginTop:1}},"GM Dashboard")),
-      e(SyncBadge,{status:syncStatus,code:sessionCode})
+      e(SyncBadge,{status:syncStatus,code:sessionCode}),
+      e(DeleteButton,{onDelete:deleteSession})
     ),
     e("div",{className:"sticky-header tab-bar",style:{background:C.header,borderBottom:"1px solid #2a3f55",top:53}},
       e("div",{style:{display:"flex",padding:"0 16px"}},
